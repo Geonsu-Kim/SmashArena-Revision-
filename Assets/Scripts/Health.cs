@@ -25,7 +25,7 @@ public class Health
     {
         curHP = MaxHP;
     }
-    public float Ratio() { return curHP / maxHP * 100; }
+    public float Ratio() { return curHP / maxHP; }
     public bool IsDead() { return curHP <= 0.0f; }
     public bool IsFilled() { return curHP >= maxHP; }
 }

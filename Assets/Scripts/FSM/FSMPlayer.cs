@@ -49,9 +49,17 @@ public class FSMPlayer : FSMBase
     {
         skillCommand[num].Execute(this.gameObject);
     }
-    public void Damaged(float amount)
+    public override void Damaged(float amount)
     {
+        if (isDead) return;
 
+        health.Damaged(amount);
+        PlayerHpbar.Instance.RenewGauge(health.Ratio());
+        StartCoroutine(ColorByHit());
+        if (health.IsDead())
+        {
+            SetStateTrigger(State.Dead);
+        }
     }
     public void SetDir(Vector2 dir)//방향키 입력 여부
     {

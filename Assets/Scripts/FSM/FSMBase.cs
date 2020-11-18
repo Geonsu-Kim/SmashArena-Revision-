@@ -60,18 +60,7 @@ public abstract class FSMBase : MonoBehaviour
             mats[i].SetColor("_Emission", color);
         }
     }
-    public void Damaged(float amount)
-    {
-        if (isDead) return;
-
-        health.Damaged(amount);
-        ObjectPoolManager.Instance.CallText("DamageText", this.transform.position + Vector3.up * 1.0f, amount);
-        StartCoroutine(ColorByHit());
-        if (health.IsDead())
-        {
-            SetStateTrigger(State.Dead);
-        }
-    }
+    public abstract void Damaged(float amount);
     public void SetState(State newState)
     {
         isNewState = true;

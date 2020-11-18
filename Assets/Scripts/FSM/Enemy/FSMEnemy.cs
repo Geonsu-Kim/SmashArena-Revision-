@@ -30,7 +30,20 @@ public  class FSMEnemy : FSMBase
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
     }
-
+    public override  void  Damaged(float amount)
+    {
+        if (isDead) return;
+        health.Damaged(amount);
+        ObjectPoolManager.Instance.CallText("DamageText", this.transform.position + Vector3.up * 1.0f, amount);
+        if (EnemyHpbar.Instance.GetActiveSelf()) EnemyHpbar.Instance.TurnOn();
+        EnemyHpbar.Instance.RenewGauge(health.Ratio());
+        StartCoroutine(ColorByHit());
+        if (health.IsDead())
+        {
+            SetStateTrigger(State.Dead);
+            EnemyHpbar.Instance.TurnOff();
+        }
+    }
     public void Attack(float amount)
     {
         if (!player.Invincibility) player.Damaged(amount);
