@@ -21,6 +21,20 @@ public class GameSceneManager : SingletonBase<GameSceneManager>
         ObjectPoolManager.Instance.CreateObject("HitYellow");
 
         ObjectPoolManager.Instance.CreateObject("HitRed");
+        DialogDataYesNo data = new DialogDataYesNo("Start the Game?", delegate (bool b)
+        {
+            if (b)
+            {
+                Debug.Log("Yes");
+
+            }
+            else
+            {
+
+                Debug.Log("No");
+            }
+        });
+        DialogManager.Instance.Push(data);
 
     }
     public FollowCam Cam { set { value = cam; } get { return cam; } }
