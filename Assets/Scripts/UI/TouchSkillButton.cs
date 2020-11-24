@@ -13,7 +13,7 @@ public class TouchSkillButton : MonoBehaviour
     private Image Icon;
     private FSMPlayer player;
     private Button button;
-    void Start()
+    private void Start()
     {
         player = GameSceneManager.Instance.Player;
         Icon = GetComponent<Image>();
@@ -40,7 +40,7 @@ public class TouchSkillButton : MonoBehaviour
         }
 
     }
-    IEnumerator SkillCoolDown()
+    private IEnumerator SkillCoolDown()
     {
         curCoolTime = 0;
         Icon.fillAmount = 0;

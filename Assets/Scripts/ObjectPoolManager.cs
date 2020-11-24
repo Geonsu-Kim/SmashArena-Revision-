@@ -6,6 +6,7 @@ class ObjectPoolManager : SingletonBase<ObjectPoolManager>
 {
     [SerializeField]
     private GameObject[] Prefabs;
+
     private List<GameObject> ObjPool;
     private void Awake()
     {
@@ -103,7 +104,7 @@ class ObjectPoolManager : SingletonBase<ObjectPoolManager>
 
 
     //이펙트만 띄우는 오브젝트에만 한함
-    IEnumerator Deactivate(GameObject obj, float time)
+    private IEnumerator Deactivate(GameObject obj, float time)
     {
         yield return YieldInstructionCache.WaitForSeconds(time);
         obj.SetActive(false);

@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 public class EnemyHpbar :SingletonBase<EnemyHpbar>
 {
-    RawImage hpBarBG;
-    Image hpBar;
+    private RawImage hpBarBG;
+    private Image hpBar;
     void Start()
     {
         hpBarBG = GetComponent<RawImage>();

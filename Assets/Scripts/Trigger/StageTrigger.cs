@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class StageTrigger : MonoBehaviour
 {
-    FSMPlayer player;
+    private FSMPlayer player;
 
     [SerializeField]
     private float battleTime;
     [SerializeField]
     private float spawnInterval;
-    
-
-
     private BoxCollider box;
-    private bool isEnd=false;
     private Collider[] hits;
 
     public EnemySpawn[] enemySpawn;

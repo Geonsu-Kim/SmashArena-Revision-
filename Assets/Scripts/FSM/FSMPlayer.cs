@@ -122,7 +122,7 @@ public class FSMPlayer : FSMBase
 
         } while (!isNewState);
     }
-    IEnumerator Roll()
+    private IEnumerator Roll()
     {
         do
         {
@@ -144,7 +144,7 @@ public class FSMPlayer : FSMBase
     }
    
   
-    IEnumerator Dash()
+    private IEnumerator Dash()
     {
         canRun = false;
         do
@@ -157,7 +157,7 @@ public class FSMPlayer : FSMBase
         } while (!isNewState);
         canRun = true;
     }
-    IEnumerator Buff()
+    private IEnumerator Buff()
     {
         canRun = false;
         do
@@ -172,7 +172,7 @@ public class FSMPlayer : FSMBase
         } while (!isNewState);
         canRun = true;
     }
-    IEnumerator Skill1()
+    private IEnumerator Skill1()
     {
         canRun = false;
         do
@@ -187,7 +187,7 @@ public class FSMPlayer : FSMBase
         } while (!isNewState);
         canRun = true;
     }
-    IEnumerator Skill2()
+    private IEnumerator Skill2()
     {
         canRun = false;
         do
@@ -202,7 +202,7 @@ public class FSMPlayer : FSMBase
         } while (!isNewState);
         canRun = true;
     }
-    IEnumerator Skill3()
+    private IEnumerator Skill3()
     {
         canRun = false;
         do
@@ -217,7 +217,7 @@ public class FSMPlayer : FSMBase
         } while (!isNewState);
         canRun = true;
     }
-    IEnumerator SuperMove()
+    private IEnumerator SuperMove()
     {
         canRun = false;
         do

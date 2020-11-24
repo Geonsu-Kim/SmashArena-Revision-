@@ -11,7 +11,7 @@ public class PlayerAction : MonoBehaviour
     public Transform[] skillPos;
     public GameObject Lightning;
     public GameObject Registance;
-    void Start()
+    private void Start()
     {
         player = GetComponent<FSMPlayer>();
     }

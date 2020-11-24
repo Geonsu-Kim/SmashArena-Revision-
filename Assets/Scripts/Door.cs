@@ -9,7 +9,7 @@ public class Door : MonoBehaviour
 
     public StageTrigger Trigger_Pre;
     public StageTrigger Trigger_Cur;
-    void Awake()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         if (Trigger_Pre != null)

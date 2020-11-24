@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class DialogDataYesNo : DialogData
 {
-    private string message;
-    private Action<bool> callback;
+     string message;
+     Action<bool> callback;
     public string Message
     {
         get { return message; }

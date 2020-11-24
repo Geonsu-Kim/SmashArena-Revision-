@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MenuButtonSet : MonoBehaviour
 {
-
+    /*
     public void OnClickMenu()
     {
 
@@ -24,5 +24,5 @@ public class MenuButtonSet : MonoBehaviour
     public void OnClickExit()
     {
 
-    }
+    }*/
 }

@@ -5,8 +5,8 @@ using TMPro;
 using System;
 public class DialogControllerYesNo : DialogController
 {
+    private DialogDataYesNo data;
     public TextMeshProUGUI TextMessage;
-    DialogDataYesNo data;
     private void Awake()
     {
         DialogManager.Instance.Regist(DialogType.YesNo, this);

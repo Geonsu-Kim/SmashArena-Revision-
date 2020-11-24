@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class DialogManager : SingletonBase<DialogManager>
 {
-    Queue<DialogData> DialogQueue;
-    Dictionary<DialogType, DialogController> DialogMap;
-    DialogController CurController;
+    private Queue<DialogData> DialogQueue;
+    private Dictionary<DialogType, DialogController> DialogMap;
+    private DialogController CurController;
     private DialogManager()
     {
         DialogQueue = new Queue<DialogData>();
