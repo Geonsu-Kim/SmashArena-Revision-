@@ -28,11 +28,14 @@ public class TouchSkillButton : MonoBehaviour
             player.Action(skill_ID);
         }
         else {
-            if (!coolDown)
+            if (GameSceneManager.Instance.OnBattle)
             {
-                coolDown = true;
-                StartCoroutine(SkillCoolDown());
-                player.Action(skill_ID);
+                if (!coolDown)
+                {
+                    coolDown = true;
+                    StartCoroutine(SkillCoolDown());
+                    player.Action(skill_ID);
+                }
             }
         }
 

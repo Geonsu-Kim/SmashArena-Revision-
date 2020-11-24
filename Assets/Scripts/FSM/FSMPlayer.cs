@@ -7,14 +7,17 @@ public class FSMPlayer : FSMBase
 {
     private bool comboOnOff = false;
     private bool canRun = true;
+    private bool isInStageBtn = false;
     private Command moveCommand;
     private Command[] skillCommand = new SkillCommand[5];
 
 
+    public StageTrigger stageTrigger;
     public Vector3 Dir = new Vector3(0, 0, 0);
     public CharacterController m_cc;
     public bool CanRun { get { return canRun; } }
     public bool ComboOnOff { get { return comboOnOff; } set { comboOnOff = value; } }
+    public bool IsInStageBtn { get { return isInStageBtn; } set { isInStageBtn = value; } }
     protected override void Awake()
     {
         base.Awake();
@@ -27,9 +30,8 @@ public class FSMPlayer : FSMBase
     private void Start()
     {
         ObjectPoolManager.Instance.CreateObject("Crasher",1);
-        ObjectPoolManager.Instance.CreateObject("LightningWave");
         ObjectPoolManager.Instance.CreateObject("OverpoweredSlash");
-        ObjectPoolManager.Instance.CreateObject("Registance");
+        ObjectPoolManager.Instance.CreateObject("Registance",1);
     }
     private void Update()
     {
@@ -49,6 +51,7 @@ public class FSMPlayer : FSMBase
     {
         skillCommand[num].Execute(this.gameObject);
     }
+
     public override void Damaged(float amount)
     {
         if (isDead) return;

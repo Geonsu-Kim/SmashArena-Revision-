@@ -1,12 +1,12 @@
 ﻿
 public enum DialogType
 {
-    Confirm,YesNo
+    Confirm, YesNo
 }
 public class DialogData
 {
     private DialogType type;
-    public DialogType Type { get { return type; }}
+    public DialogType Type { get { return type; } }
 
     public DialogData(DialogType _type)
     {

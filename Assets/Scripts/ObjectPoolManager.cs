@@ -46,8 +46,7 @@ class ObjectPoolManager : SingletonBase<ObjectPoolManager>
                 return ObjPool[i + 1];
             }
             if (!ObjPool[i].name.Equals(name)) continue;
-            if (!ObjPool[i].activeSelf) return ObjPool[i];
-
+            if (!ObjPool[i].activeSelf)return ObjPool[i];
         }
         return null;
     }

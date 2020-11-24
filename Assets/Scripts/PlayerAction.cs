@@ -17,14 +17,27 @@ public class PlayerAction : MonoBehaviour
     }
     public void Attack()
     {
-        player.ComboOnOff = true;
-        if (player.IsStanding())
+        if (GameSceneManager.Instance.OnBattle)
         {
-            player.SetState(State.Attack);
+            player.ComboOnOff = true;
+            if (player.IsStanding())
+            {
+                player.SetState(State.Attack);
+            }
+            else if (player.IsRunning())
+            {
+                player.SetState(State.Dash);
+            }
         }
-        else if (player.IsRunning())
+        else
         {
-            player.SetState(State.Dash);
+            if (player.IsInStageBtn&&player.stageTrigger!=null)
+            {
+                DialogDataYesNo data = new DialogDataYesNo("Start the Game?", delegate (bool b) {
+                    if (b) { player.stageTrigger.StartBattle(); }
+                });
+                DialogManager.Instance.Push(data);
+            }
         }
 
     }

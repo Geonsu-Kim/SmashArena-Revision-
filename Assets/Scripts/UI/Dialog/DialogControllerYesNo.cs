@@ -9,10 +9,8 @@ public class DialogControllerYesNo : DialogController
     DialogDataYesNo data;
     private void Awake()
     {
-        Debug.Log("sdsd");
-
-
         DialogManager.Instance.Regist(DialogType.YesNo, this);
+        this.gameObject.SetActive(false);
     }
     public override void Build(DialogData _data)
     {

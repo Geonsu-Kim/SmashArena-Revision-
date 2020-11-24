@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogManager :SingletonBase<DialogManager>
+public class DialogManager : SingletonBase<DialogManager>
 {
     Queue<DialogData> DialogQueue;
     Dictionary<DialogType, DialogController> DialogMap;
@@ -12,7 +12,7 @@ public class DialogManager :SingletonBase<DialogManager>
         DialogQueue = new Queue<DialogData>();
         DialogMap = new Dictionary<DialogType, DialogController>();
     }
-    public void Regist(DialogType type,DialogController controller)
+    public void Regist(DialogType type, DialogController controller)
     {
         DialogMap[type] = controller;
     }

@@ -15,7 +15,7 @@ public class DialogDataYesNo : DialogData
     {
         get { return callback; }
     }
-    public DialogDataYesNo(string _message,Action<bool> _callback = null):base(DialogType.YesNo)
+    public DialogDataYesNo(string _message, Action<bool> _callback = null) : base(DialogType.YesNo)
     {
         message = _message;
         callback = _callback;
