@@ -18,11 +18,11 @@ public class SkillCommand : Command
         {
             switch (m_num)
             {
-                case 0: action.Attack(); break;
-                case 1: action.Roll(); break;
-                case 2: action.Skill1(); break;
-                case 3: action.Skill2(); break;
-                case 4: action.Skill3(); break;
+                case 0: action.Skill1(); break;
+                case 1: action.Skill2(); break;
+                case 2: action.Skill3(); break;
+                case 3: action.Roll();   break;
+                case 4: action.Attack(); break;
             }
             return true;
         }

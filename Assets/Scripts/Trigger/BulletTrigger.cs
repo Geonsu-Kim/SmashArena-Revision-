@@ -37,7 +37,7 @@ public class BulletTrigger : EffectTrigger
 
             if (hit != null)
             {
-                ObjectPoolManager.Instance.CallObject(hit.name, this.transform, deact, time);
+                ObjectPoolManager.Instance.CallObject(hit.name, this.transform.position+Vector3.up*0.25f,Quaternion.identity, deact, time);
 
             }
         }

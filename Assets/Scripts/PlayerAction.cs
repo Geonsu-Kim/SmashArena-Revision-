@@ -33,8 +33,10 @@ public class PlayerAction : MonoBehaviour
         {
             if (player.IsInStageBtn&&player.stageTrigger!=null)
             {
+                Time.timeScale = 0;
                 DialogDataYesNo data = new DialogDataYesNo("Start the Game?", delegate (bool b) {
                     if (b) { player.stageTrigger.StartBattle(); }
+                    Time.timeScale = 1;
                 });
                 DialogManager.Instance.Push(data);
             }
@@ -65,7 +67,7 @@ public class PlayerAction : MonoBehaviour
         {
             FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
             fSM.SetStateTrigger(State.Stun);
-            ObjectPoolManager.Instance.CallObject("HitYellow",
+            ObjectPoolManager.Instance.CallObject("Hit",
           colls[i].gameObject.transform.position + Vector3.up * 1.0f,
           Quaternion.identity, true, 0.5f);
         }

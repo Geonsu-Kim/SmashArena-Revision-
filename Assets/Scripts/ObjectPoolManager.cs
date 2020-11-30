@@ -23,6 +23,11 @@ class ObjectPoolManager : SingletonBase<ObjectPoolManager>
                 break;
             }
         }
+        if (obj == null)
+        {
+            Debug.Log(name + " can't be found");
+            return;
+        }
         CreateObject(obj, name, cnt, parent);
     }
     public void CreateObject(GameObject newObj, string name, int cnt, Transform parent = null)

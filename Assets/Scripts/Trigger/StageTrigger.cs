@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class StageTrigger : MonoBehaviour
-{
-    private FSMPlayer player;
-
-    [SerializeField]
+{    [SerializeField]
     private float battleTime;
     [SerializeField]
     private float spawnInterval;
+    private FSMPlayer player;
+    private ParticleSystem ps;
     private BoxCollider box;
     private Collider[] hits;
 
@@ -21,6 +20,7 @@ public class StageTrigger : MonoBehaviour
     private void Awake()
     {
         box = GetComponent<BoxCollider>();
+        ps = GetComponent<ParticleSystem>();
     }
     private void Start()
     {
@@ -57,6 +57,7 @@ public class StageTrigger : MonoBehaviour
         box.enabled = false;
         player.stageTrigger = null;
         player.IsInStageBtn = false;
+        ps.Stop();
         StartCoroutine(OnBattle());
         for (int i = 0; i < Doors_Cur.Count; i++)
         {
@@ -91,7 +92,7 @@ public class StageTrigger : MonoBehaviour
         {
             Doors_Next[i].Open();
         }
-        player.Damaged(player.health.MaxHP*-1);
+        player.Damaged((int)player.health.MaxHP*-1);
         GameSceneManager.Instance.OnBattle = false;
 
     }

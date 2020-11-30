@@ -16,7 +16,8 @@ public  class FSMEnemy : FSMBase
     protected new CapsuleCollider collider;
     public Rigidbody rb;
     public FSMPlayer Player { get { return player; } }
-    
+
+    public Collider[] colliders;
     protected virtual void Start()
     {
         player = GameSceneManager.Instance.Player;
@@ -30,9 +31,14 @@ public  class FSMEnemy : FSMBase
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
     }
-    public override  void  Damaged(float amount)
+    private void Update()
+    {
+        Debug.Log(m_state.ToString());
+    }
+    public override  void  Damaged(int amount,bool critical=false)
     {
         if (isDead) return;
+        if (critical) amount *= 2;
         health.Damaged(amount);
         ObjectPoolManager.Instance.CallText("DamageText", this.transform.position + Vector3.up * 1.0f, amount);
         if (EnemyHpbar.Instance.GetActiveSelf()) EnemyHpbar.Instance.TurnOn();
@@ -43,10 +49,6 @@ public  class FSMEnemy : FSMBase
             SetStateTrigger(State.Dead);
             EnemyHpbar.Instance.TurnOff();
         }
-    }
-    public void Attack(float amount)
-    {
-        if (!player.Invincibility) player.Damaged(amount);
     }
     public bool DistanceCheck(Vector3 target, float dist)
     {
@@ -105,6 +107,10 @@ public  class FSMEnemy : FSMBase
         agent.Stop();
         collider.enabled = false;
         rb.isKinematic = true;
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = false;
+        }
         yield return YieldInstructionCache.WaitForSeconds(2.0f);
         float amount = 0;
         do

@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class SkeletonRangedAnimEvent : EnemyAnimationEvent
 {
+    private int randomNum;
     // Start is called before the first frame update
     public Transform FirePos;
+    public Transform[] PArrowRainPts;
 
-    protected override void Start()
-    {
-        base.Start();
-    }
     private void Skeleton_RangedAttack()
     {
         ObjectPoolManager.Instance.CallObject("NormalArrow", FirePos, true, 2.0f);
@@ -18,12 +16,12 @@ public class SkeletonRangedAnimEvent : EnemyAnimationEvent
     private void OnHomingArrowReady() //Homing Arrow
     {
 
-        ObjectPoolManager.Instance.CallObject("SkillMark", this.transform.position + Vector3.up * 0.1f, Quaternion.identity,true,1.5f);
+        ObjectPoolManager.Instance.CallObject("SkillMark", this.transform.position + Vector3.up * 0.1f, Quaternion.identity, true, 1.5f);
     }
     private void OnHomingArrowFire()
     {
 
-        ObjectPoolManager.Instance.CallObject("HomingArrow", FirePos,true , 7.0f);
+        ObjectPoolManager.Instance.CallObject("HomingArrow", FirePos, true, 7.0f);
     }
     private void OnChargeShotReady() //Charge Shot
     {
@@ -42,35 +40,34 @@ public class SkeletonRangedAnimEvent : EnemyAnimationEvent
     }
     private void OnArrowRainReady()
     {
-        StartCoroutine(ArrowRain(false));
+        randomNum = Random.Range(0, PArrowRainPts.Length);
+        StartCoroutine(ArrowRain(false, PArrowRainPts[randomNum]));
     }
     private void OnArrowRainFire()
     {
-        StartCoroutine(ArrowRain(true));
+        StartCoroutine(ArrowRain(true, PArrowRainPts[randomNum]));
+
     }
-    IEnumerator ArrowRain(bool attack)
+    IEnumerator ArrowRain(bool attack, Transform points)
     {
-
-
         if (attack)
         {
             yield return YieldInstructionCache.WaitForSeconds(0.5f);
             for (int j = 0; j < 2; j++)
             {
-
-                for (int i = 0; i < points.Length; i++)
+                for (int i = 0; i < points.childCount; i++)
                 {
-                    yield return YieldInstructionCache.WaitForSeconds(0.1f);
-                    ObjectPoolManager.Instance.CallObject("ExplosiveArrow", points[i].position, Quaternion.Euler(60, -90, -90));
+                    yield return YieldInstructionCache.WaitForSeconds(0.02f);
+                    ObjectPoolManager.Instance.CallObject("ExplosiveArrow", points.GetChild(i).position + Vector3.up * 30f, Quaternion.Euler(90, 90, -90));
                 }
             }
         }
         else
         {
-            for (int i = 0; i < points.Length; i++)
+            for (int i = 0; i < points.childCount; i++)
             {
-                yield return YieldInstructionCache.WaitForSeconds(0.1f);
-                ObjectPoolManager.Instance.CallObject("SkillMark", points[i].position+Vector3.up*0.1f, Quaternion.identity, true, 1.5f);
+                yield return YieldInstructionCache.WaitForSeconds(0.02f);
+                ObjectPoolManager.Instance.CallObject("SkillMark", points.GetChild(i).position + Vector3.up * 0.1f, Quaternion.identity, true, 1.5f);
             }
         }
     }

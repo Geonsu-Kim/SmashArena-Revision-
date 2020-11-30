@@ -13,7 +13,8 @@ public class EffectTrigger : MonoBehaviour
             ||(this.gameObject.CompareTag("EnemyAttack")&& other.gameObject.CompareTag("Player")))
         {
             FSMBase fSM = other.gameObject.GetComponent<FSMBase>();
-            fSM.Damaged(damageScalar);
+            float damage = Random.Range(0.85f, 1.15f) * damageScalar;
+            fSM.Damaged((int)damage);
         }
     }
 }

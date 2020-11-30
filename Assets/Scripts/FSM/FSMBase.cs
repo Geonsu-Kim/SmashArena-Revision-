@@ -60,7 +60,7 @@ public abstract class FSMBase : MonoBehaviour
             mats[i].SetColor("_Emission", color);
         }
     }
-    public abstract void Damaged(float amount);
+    public abstract void Damaged(int amount,bool critical=false);
     public void SetState(State newState)
     {
         isNewState = true;

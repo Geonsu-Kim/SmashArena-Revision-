@@ -21,7 +21,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
     {
         base.Start();
         ObjectPoolManager.Instance.CreateObject("NormalArrow");
-        ObjectPoolManager.Instance.CreateObject("ExplosiveArrow", 10);
+        ObjectPoolManager.Instance.CreateObject("ExplosiveArrow", 40);
 
         
         ObjectPoolManager.Instance.CreateObject("HomingArrow",1);

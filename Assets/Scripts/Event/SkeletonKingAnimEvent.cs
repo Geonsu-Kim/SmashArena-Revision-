@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SkeletonKingAnimEvent : EnemyAnimationEvent
 {
+
+    public Transform[] ThunderFallPts;
     private void Skeleton_KingAttackStart(AnimationEvent animationEvent)
     {
         EnabledCollider(animationEvent.intParameter);
@@ -55,19 +57,19 @@ public class SkeletonKingAnimEvent : EnemyAnimationEvent
             for (int j = 0; j < 2; j++)
             {
 
-                for (int i = 0; i < points.Length; i++)
+                for (int i = 0; i < ThunderFallPts.Length; i++)
                 {
                     yield return YieldInstructionCache.WaitForSeconds(0.1f);
-                    ObjectPoolManager.Instance.CallObject("DarkThunderFall", points[i].position, Quaternion.Euler(60, -90, -90));
+                    ObjectPoolManager.Instance.CallObject("DarkThunderFall", ThunderFallPts[i].position, Quaternion.Euler(60, -90, -90));
                 }
             }
         }
         else
         {
-            for (int i = 0; i < points.Length; i++)
+            for (int i = 0; i < ThunderFallPts.Length; i++)
             {
                 yield return YieldInstructionCache.WaitForSeconds(0.1f);
-                ObjectPoolManager.Instance.CallObject("SkillMark", points[i].position + Vector3.up * 0.1f, Quaternion.identity, true, 1.5f);
+                ObjectPoolManager.Instance.CallObject("SkillMark", ThunderFallPts[i].position + Vector3.up * 0.1f, Quaternion.identity, true, 1.5f);
             }
         }
     }

@@ -23,7 +23,7 @@ public class TouchSkillButton : MonoBehaviour
 
     public  void SkillButtonDown()
     {
-        if (skill_ID== 0)
+        if (skill_ID== 4)
         {
             player.Action(skill_ID);
         }
@@ -44,10 +44,11 @@ public class TouchSkillButton : MonoBehaviour
     {
         curCoolTime = 0;
         Icon.fillAmount = 0;
-        while (maxCoolTime>= curCoolTime)
+        float realMaxCoolTime = maxCoolTime * player.coef_SkillCoolDown[skill_ID] * player.coef_SkillCoolDownAll;
+        while (curCoolTime <realMaxCoolTime )
         {
             curCoolTime += Time.smoothDeltaTime;
-            Icon.fillAmount = curCoolTime / maxCoolTime;
+            Icon.fillAmount = curCoolTime / realMaxCoolTime;
             yield return null;
         }
         coolDown = false;

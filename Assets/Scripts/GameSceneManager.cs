@@ -23,11 +23,7 @@ public class GameSceneManager : SingletonBase<GameSceneManager>
     private void Start()
     {
 
-        ObjectPoolManager.Instance.CreateObject("HitWhite");
-
-        ObjectPoolManager.Instance.CreateObject("HitYellow");
-
-        ObjectPoolManager.Instance.CreateObject("HitRed");
+        ObjectPoolManager.Instance.CreateObject("Hit");
 
 
     }

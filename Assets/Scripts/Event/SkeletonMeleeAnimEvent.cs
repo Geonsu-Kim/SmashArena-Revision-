@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.Events;
 public class SkeletonMeleeAnimEvent : EnemyAnimationEvent
 {
-
     private int randomPos = 0;
-    public Transform[] StrikePos;
+    public Transform[] StrikePts;
+    public Transform[] SummonPts;
     // Start is called before the first frame update
     private void Skeleton_MeleeAttackStart(AnimationEvent animationEvent)
     {
@@ -20,11 +21,11 @@ public class SkeletonMeleeAnimEvent : EnemyAnimationEvent
 
     private void OnSummon() //Summon
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < SummonPts.Length; i++)
         {
-            ObjectPoolManager.Instance.CallObject("BuffMark", points[i].transform.position + Vector3.up * 0.2f, Quaternion.Euler(-90,0,0), true, 2.0f);
+            ObjectPoolManager.Instance.CallObject("BuffMark", SummonPts[i].transform.position + Vector3.up * 0.2f, Quaternion.Euler(-90,0,0), true, 2.0f);
 
-            ObjectPoolManager.Instance.CallObject("SkeletonInfantry", points[i]);
+            ObjectPoolManager.Instance.CallObject("SkeletonInfantry", SummonPts[i]);
         }
     }
     private void OnDisappointed() //중대장은 너희에게 실망했다
@@ -32,39 +33,30 @@ public class SkeletonMeleeAnimEvent : EnemyAnimationEvent
         ObjectPoolManager.Instance.CallObject("InfantryBuff", this.transform.position + Vector3.up * 0.2f, Quaternion.identity,true,2.0f);
         
         Collider[] colls = Physics.OverlapSphere(this.transform.position + this.transform.forward * 0.1f, 3f, 1 << 8);
-        
-        for (int i = 0; i < 5; i++)
+        int max = colls.Length > 5 ? 5 : colls.Length ;
+        for (int i = 0; i < max; i++)
         {
             FSMEnemy melee = colls[i].GetComponent<FSMEnemy>();
-            if (melee == null)
-            {
-                i--;
-                continue;
-            }
-            else
-            {
+
                 ObjectPoolManager.Instance.CallObject("BuffMark", melee.transform.position + Vector3.up * 0.2f, Quaternion.identity,true,2.0f);
                 StartCoroutine(melee.Buff());
-            }
+            
         }
 
     }
     private void OnCompanyStrikeReady() //Company Strike
     {
-        randomPos = Random.Range(0, StrikePos.Length);
-       /* for (int i = 0; i < StrikePos.Length; i++)
+        randomPos = Random.Range(0, StrikePts.Length);/*
+       for (int i = 0; i < StrikePts[randomPos].childCount; i++)
         {
-            if (i == randomPos) continue;
-            ObjectPoolManager.Instance.CallObject("StrikeMark", StrikePos[i].transform.position + Vector3.up * 0.2f, Quaternion.identity, true, 2.0f);
+            ObjectPoolManager.Instance.CallObject("StrikeMark", StrikePts[randomPos].GetChild(i).transform,true,2.0f);
         }*/
     }
     private void OnCompanyStrike()
     { 
-    Debug.Log(randomPos);
-        for (int i = 0; i < StrikePos.Length; i++)
+        for (int i = 0; i < StrikePts[randomPos].childCount; i++)
         {
-            if (i == randomPos) continue;
-            ObjectPoolManager.Instance.CallObject("SkeletonStriker", StrikePos[i].transform.position + Vector3.up * 0.2f, Quaternion.identity, true, 2.0f);
+            ObjectPoolManager.Instance.CallObject("SkeletonStriker", StrikePts[randomPos].GetChild(i).transform, true, 2.0f);
         }
     }
 }
