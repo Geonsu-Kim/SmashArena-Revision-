@@ -9,24 +9,26 @@ public class FSMPlayer : FSMBase
     private bool canRun = true;
     private bool isInStageBtn = false;
 
-    private bool buffAttack=false;
+    private bool buffAttack = false;
     private bool buffDefense = false;
     private bool buffCritical = false;
     private bool buffCoolDown = false;
 
-    private float buffTime_Attack=0;
-    private float buffTime_Defense=0;
-    private float buffTime_Critical=0;
-    private float buffTime_CoolDown=0;
-    
-    
+    private float buffTime_Attack = 0;
+    private float buffTime_Defense = 0;
+    private float buffTime_Critical = 0;
+    private float buffTime_CoolDown = 0;
+
+
     private Command moveCommand;
     private Command[] skillCommand = new SkillCommand[5];
-    [HideInInspector] public float coef_BaseAtk =1;
+    [HideInInspector] public float coef_BaseAtk = 1;
     [HideInInspector] public float coef_BaseDefense = 1;
-    [HideInInspector] public float coef_Skill1 =1;
-    [HideInInspector] public float coef_Skill2 =1;
-    [HideInInspector] public float coef_CriticalAtk =0;
+    [HideInInspector] public float coef_MaxHP = 1;
+    [HideInInspector] public float coef_Skill1 = 1;
+    [HideInInspector] public float coef_Skill2 = 1;
+    [HideInInspector] public float coef_Skill3 = 1;
+    [HideInInspector] public float coef_CriticalAtk = 0;
     [HideInInspector] public float[] coef_SkillCoolDown;
     [HideInInspector] public float coef_SkillCoolDownAll = 1f;
 
@@ -41,7 +43,7 @@ public class FSMPlayer : FSMBase
     protected override void Awake()
     {
         base.Awake();
-        m_cc = GetComponent<CharacterController>(); 
+        m_cc = GetComponent<CharacterController>();
         moveCommand = new MoveCommand();
         for (int i = 0; i < skillCommand.Length; i++)
         {
@@ -76,7 +78,7 @@ public class FSMPlayer : FSMBase
     {
         if (isDead) return;
 
-        health.Damaged(amount* coef_BaseDefense);
+        health.Damaged(amount * coef_BaseDefense);
         PlayerHpbar.Instance.RenewGauge(health.Ratio());
         StartCoroutine(ColorByHit());
         if (health.IsDead())
@@ -84,82 +86,95 @@ public class FSMPlayer : FSMBase
             SetStateTrigger(State.Dead);
         }
     }
+    public void Recovered(int amount)
+    {
+        if (isDead) return;
+
+        health.Recovered(amount);
+        PlayerHpbar.Instance.RenewGauge(health.Ratio());
+
+    }
     public void GetItem(ItemType type)
     {
         switch (type)
         {
             case ItemType.AttackUp:
-                if (buffAttack){buffTime_Attack = 0.0f;}
-                else{ StartCoroutine(AttackBuff()); }
+                if (buffAttack) { buffTime_Attack = 0.0f; }
+                else { StartCoroutine(AttackBuff(0.25f)); }
                 break;
             case ItemType.DefenseUp:
                 if (buffDefense) { buffTime_Defense = 0.0f; }
-                else { StartCoroutine(DefenseBuff()); }
+                else { StartCoroutine(DefenseBuff(0.2f)); }
                 break;
             case ItemType.CriticalUp:
                 if (buffCritical) { buffTime_Critical = 0.0f; }
-                else { StartCoroutine(CriticalBuff()); }
+                else { StartCoroutine(CriticalBuff(0.1f)); }
                 break;
             case ItemType.CooltimeDown:
                 if (buffCoolDown) { buffTime_CoolDown = 0.0f; }
-                else { StartCoroutine(CoolDownBuff()); }
+                else { StartCoroutine(CoolDownBuff(0.2f)); }
                 break;
             case ItemType.BlueGem:
                 break;
             case ItemType.RedGem:
                 break;
-            case ItemType.HP:
+            case ItemType.HPFew:
+                Recovered(1500);
                 break;
-            case ItemType.MP:
+            case ItemType.HPNormal:
+                Recovered(2500);
+                break;
+            case ItemType.HPMuch:
+                Recovered(3500);
                 break;
         }
     }
 
-    IEnumerator AttackBuff()
+    IEnumerator AttackBuff(float amount)
     {
-        coef_BaseAtk += 0.25f;
+        coef_BaseAtk += amount;
         buffAttack = true;
-        while (buffTime_Attack<10f)
+        while (buffTime_Attack < 10f)
         {
             yield return null;
         }
-        coef_BaseAtk -= 0.25f;
+        coef_BaseAtk -= amount;
         buffAttack = false;
     }
-    IEnumerator DefenseBuff()
+    IEnumerator DefenseBuff(float amount)
     {
-        coef_BaseDefense -= 0.25f;
+        coef_BaseDefense -= amount;
         buffDefense = true;
-        while (buffTime_Defense<10f)
+        while (buffTime_Defense < 10f)
         {
             yield return null;
         }
-        coef_BaseDefense += 0.25f;
+        coef_BaseDefense += amount;
         buffDefense = false;
     }
-    IEnumerator CriticalBuff()
+    IEnumerator CriticalBuff(float amount)
     {
-        coef_CriticalAtk += 0.1f;
+        coef_CriticalAtk += amount;
         buffCritical = true;
-        while (buffTime_Critical<10f)
+        while (buffTime_Critical < 10f)
         {
             yield return null;
         }
-        coef_CriticalAtk -= 0.1f;
+        coef_CriticalAtk -= amount;
         buffCritical = false;
     }
-    IEnumerator CoolDownBuff()
+    IEnumerator CoolDownBuff(float amount)
     {
-        coef_SkillCoolDownAll -= 0.2f;
+        coef_SkillCoolDownAll -= amount;
         buffCoolDown = true;
-        while (buffTime_CoolDown<10f)
+        while (buffTime_CoolDown < 10f)
         {
             yield return null;
         }
-        coef_SkillCoolDownAll += 0.2f;
+        coef_SkillCoolDownAll += amount;
         buffCoolDown = false;
     }
-    
+
     public void Action(int num)
     {
         skillCommand[num].Execute(this.gameObject);
@@ -193,7 +208,7 @@ public class FSMPlayer : FSMBase
             }
             else if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.6f)
             {
-                if (!comboOnOff) 
+                if (!comboOnOff)
                 {
                     SetState(State.Idle);
                 }
@@ -208,7 +223,7 @@ public class FSMPlayer : FSMBase
         do
         {
             yield return null;
-            if (!GetDir()&& animator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
+            if (!GetDir() && animator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
             {
                 SetState(State.Idle);
             }
@@ -244,8 +259,8 @@ public class FSMPlayer : FSMBase
         } while (!isNewState);
         invincibility = false;
     }
-   
-  
+
+
     private IEnumerator Dash()
     {
         canRun = false;

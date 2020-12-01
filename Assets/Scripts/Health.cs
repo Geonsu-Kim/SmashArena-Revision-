@@ -21,6 +21,10 @@ public class Health
         curHP += amount;
         if (IsFilled()) curHP = maxHP;
     }
+    public void ChangeMaxHP(float coef)
+    {
+        maxHP *= coef;
+    }
     public void Revive()
     {
         curHP = MaxHP;

@@ -42,42 +42,55 @@ class PlayerAnimationEvent : MonoBehaviour
     }
     public void OnSkill1()
     {
+        if (player.coef_Skill1 < 4)
+        {
+            StartCoroutine(GameSceneManager.Instance.Cam.Shake(0.1f, 0.25f));
+            ObjectPoolManager.Instance.CallObject("OverpoweredSlash",
+                this.transform.position + Vector3.up * 1.0f,
+                this.transform.rotation * Quaternion.Euler(0, 0, 90), true, 1.5f);
+            Collider[] colls = Physics.OverlapSphere(this.transform.position, 3f * (1 + (player.coef_Skill1 * 0.1f-0.1f)), 1 << 8);
+            for (int i = 0; i < colls.Length; i++)
+            {
 
-        StartCoroutine(GameSceneManager.Instance.Cam.Shake(0.1f, 0.25f));
-        ObjectPoolManager.Instance.CallObject("OverpoweredSlash",
-            this.transform.position + Vector3.up * 1.0f,
-            this.transform.rotation * Quaternion.Euler(0, 0, 90),true,1.5f);
-        Collider[] colls = Physics.OverlapSphere(this.transform.position, 3f, 1 << 8);
-        for (int i = 0; i < colls.Length; i++)
+                damage = player.characterState.AttackDamage * player.coef_BaseAtk * (1 + (player.coef_Skill1 * 0.15f-0.15f)) * Random.Range(2.85f, 3.15f);
+                FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
+                fSM.rb.AddForce((fSM.transform.position - this.transform.position).normalized * 20f, ForceMode.VelocityChange);
+                fSM.Damaged((int)damage, IsCritical());
+                ObjectPoolManager.Instance.CallObject("Hit",
+              colls[i].gameObject.transform.position + Vector3.up * 1.0f,
+              Quaternion.identity, true, 0.5f);
+            }
+        }
+        else if (player.coef_Skill1 >= 4 && player.coef_Skill1 < 7)
         {
 
-            damage = player.characterState.AttackDamage * player.coef_Skill1 * Random.Range(2.85f, 3.15f);
-            FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
-            fSM.rb.AddForce((fSM.transform.position - this.transform.position).normalized * 20f,ForceMode.VelocityChange);
-            fSM.Damaged((int)damage, IsCritical());
-            ObjectPoolManager.Instance.CallObject("Hit",
-          colls[i].gameObject.transform.position + Vector3.up * 1.0f,
-          Quaternion.identity, true, 0.5f);
         }
     }
     public void OnSkill2()
     {
 
-        StartCoroutine(GameSceneManager.Instance.Cam.Shake(0.3f, 0.5f));
-        ObjectPoolManager.Instance.CallObject("Crasher",
-     this.transform.position + Vector3.up * 1.0f+this.transform.forward*0.1f,
-     Quaternion.identity,true,1.5f);
+        if (player.coef_Skill2 < 4)
+        {
+            StartCoroutine(GameSceneManager.Instance.Cam.Shake(0.3f, 0.5f));
+            ObjectPoolManager.Instance.CallObject("Crasher",
+         this.transform.position + Vector3.up * 1.0f + this.transform.forward * 0.1f,
+         Quaternion.identity, true, 1.5f);
 
-        Collider[] colls = Physics.OverlapSphere(this.transform.position+ this.transform.forward * 0.1f, 3f, 1 << 8);
-        for (int i = 0; i < colls.Length; i++)
+            Collider[] colls = Physics.OverlapSphere(this.transform.position + this.transform.forward * 0.1f, 3f * (1 + (player.coef_Skill2 * 0.1f-0.1f)), 1 << 8);
+            for (int i = 0; i < colls.Length; i++)
+            {
+
+                damage = player.characterState.AttackDamage * player.coef_BaseAtk * (1 + (player.coef_Skill2 * 0.15f-0.15f)) * Random.Range(6.25f, 6.75f);
+                FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
+                fSM.Damaged((int)damage, IsCritical());
+                ObjectPoolManager.Instance.CallObject("Hit",
+              colls[i].gameObject.transform.position + Vector3.up * 1.0f,
+              Quaternion.identity, true, 0.5f);
+            }
+        }
+        else if (player.coef_Skill2 >= 4 && player.coef_Skill2 < 7)
         {
 
-            damage = player.characterState.AttackDamage * player.coef_Skill2 * Random.Range(6.25f, 6.75f);
-            FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
-            fSM.Damaged((int)damage, IsCritical());
-            ObjectPoolManager.Instance.CallObject("Hit",
-          colls[i].gameObject.transform.position + Vector3.up * 1.0f,
-          Quaternion.identity, true, 0.5f);
         }
     }
 }
