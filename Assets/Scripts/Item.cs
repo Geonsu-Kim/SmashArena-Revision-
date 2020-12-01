@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 public enum ItemType{
-    AttackUp,DefenseUp,CriticalUp,CooltimeDown,BlueGem,RedGem,HP,MP
+    AttackUp,DefenseUp,CriticalUp,CooltimeDown,BlueGem,RedGem,HPNormal,HPFew,HPMuch
 }
 public class Item
 {
