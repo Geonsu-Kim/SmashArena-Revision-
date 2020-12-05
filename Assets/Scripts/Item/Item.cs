@@ -1,28 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+public enum ItemType{
+    Buff,Potion,Goods
+}
 
-public class DroppedItemTrigger : MonoBehaviour
+public abstract class Item : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private Item item;
-    private FSMPlayer player;
 
     public ItemType type;
-    private void Awake()
-    {
-        item = new Item(type);
-    }
+    protected FSMPlayer player;
+    protected abstract void GetItem(FSMPlayer player); 
     private void Start()
     {
         player = GameSceneManager.Instance.Player;
     }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            item.GetItem(player);
+            GetItem(player);
             gameObject.SetActive(false);
         }
     }

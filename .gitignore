@@ -16,7 +16,8 @@
 *.user
 *.unityproj
 *.booproj
-
+*.lighting
+*.props
 
 Temp/
  
@@ -26,6 +27,9 @@ UnityGenerated/
 ProjectSettings/ 
 Library/
 
+SmashArena(Revision)/
+build/
+UnityPlayerStub/
 Assets/TextMesh Pro/
 Assets/Imported/
 Assets/Animation/

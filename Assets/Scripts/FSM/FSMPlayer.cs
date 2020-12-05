@@ -43,6 +43,7 @@ public class FSMPlayer : FSMBase
     protected override void Awake()
     {
         base.Awake();
+        DontDestroyOnLoad(gameObject);
         m_cc = GetComponent<CharacterController>();
         moveCommand = new MoveCommand();
         for (int i = 0; i < skillCommand.Length; i++)
@@ -94,84 +95,98 @@ public class FSMPlayer : FSMBase
         PlayerHpbar.Instance.RenewGauge(health.Ratio());
 
     }
-    public void GetItem(ItemType type)
+    public void GetBuff(BuffType buff)
     {
-        switch (type)
+        switch (buff)
         {
-            case ItemType.AttackUp:
-                if (buffAttack) { buffTime_Attack = 0.0f; }
-                else { StartCoroutine(AttackBuff(0.25f)); }
+            case BuffType.AttackUp:
+                if (buffAttack) buffTime_Attack = 0; else StartCoroutine(AttackBuff());
                 break;
-            case ItemType.DefenseUp:
-                if (buffDefense) { buffTime_Defense = 0.0f; }
-                else { StartCoroutine(DefenseBuff(0.2f)); }
+            case BuffType.DefenseUp:
+                if (buffDefense) buffTime_Defense = 0; else StartCoroutine(DefenseBuff());
                 break;
-            case ItemType.CriticalUp:
-                if (buffCritical) { buffTime_Critical = 0.0f; }
-                else { StartCoroutine(CriticalBuff(0.1f)); }
+            case BuffType.CriticalUp:
+                if (buffCritical) buffTime_Critical = 0; else StartCoroutine(CriticalBuff());
                 break;
-            case ItemType.CooltimeDown:
-                if (buffCoolDown) { buffTime_CoolDown = 0.0f; }
-                else { StartCoroutine(CoolDownBuff(0.2f)); }
+            case BuffType.CooltimeDown:
+                if (buffCoolDown) buffTime_CoolDown = 0; else StartCoroutine(CoolDownBuff());
                 break;
-            case ItemType.BlueGem:
+        }
+    }
+    public void GetGoods(GoodsType goods,int amount)
+    {
+        switch (goods)
+        {
+            case GoodsType.BlueGem:
+                GameDataBase.Instance.blueGem += amount;
                 break;
-            case ItemType.RedGem:
+            case GoodsType.RedGem:
+                GameDataBase.Instance.redGem += amount;
                 break;
-            case ItemType.HPFew:
-                Recovered(1500);
+        }
+    }
+    public void GetPotion(PotionType potion,int level)
+    {
+        int amount = 0;
+        switch (level)
+        {
+            case 1: amount = 1500; break;
+            case 2: amount = 2500; break;
+            case 3: amount = 3500; break;
+        }
+        switch (potion)
+        {
+            case PotionType.HP:
+                Recovered(amount);
                 break;
-            case ItemType.HPNormal:
-                Recovered(2500);
-                break;
-            case ItemType.HPMuch:
-                Recovered(3500);
+            case PotionType.MP:
+                amount /= 5;
                 break;
         }
     }
 
-    IEnumerator AttackBuff(float amount)
+    IEnumerator AttackBuff()
     {
-        coef_BaseAtk += amount;
+        coef_BaseAtk += 0.25f;
         buffAttack = true;
         while (buffTime_Attack < 10f)
         {
             yield return null;
         }
-        coef_BaseAtk -= amount;
+        coef_BaseAtk -= 0.25f;
         buffAttack = false;
     }
-    IEnumerator DefenseBuff(float amount)
+    IEnumerator DefenseBuff()
     {
-        coef_BaseDefense -= amount;
+        coef_BaseDefense -= 0.25f;
         buffDefense = true;
         while (buffTime_Defense < 10f)
         {
             yield return null;
         }
-        coef_BaseDefense += amount;
+        coef_BaseDefense += 0.25f;
         buffDefense = false;
     }
-    IEnumerator CriticalBuff(float amount)
+    IEnumerator CriticalBuff()
     {
-        coef_CriticalAtk += amount;
+        coef_CriticalAtk += 0.1f;
         buffCritical = true;
         while (buffTime_Critical < 10f)
         {
             yield return null;
         }
-        coef_CriticalAtk -= amount;
+        coef_CriticalAtk -= 0.1f;
         buffCritical = false;
     }
-    IEnumerator CoolDownBuff(float amount)
+    IEnumerator CoolDownBuff()
     {
-        coef_SkillCoolDownAll -= amount;
+        coef_SkillCoolDownAll -= 0.2f;
         buffCoolDown = true;
         while (buffTime_CoolDown < 10f)
         {
             yield return null;
         }
-        coef_SkillCoolDownAll += amount;
+        coef_SkillCoolDownAll += 0.2f;
         buffCoolDown = false;
     }
 
