@@ -22,7 +22,7 @@ public class FSMSkeletonMelee : FSMEnemy
     {
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             yield return null;
             if (!DistanceCheck(player.transform.position, characterState.AttackRange))
             {
@@ -38,7 +38,7 @@ public class FSMSkeletonMelee : FSMEnemy
     {
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             agent.TraceTarget(Player.transform.position);
             yield return null;
             if (DistanceCheck(player.transform.position, 50f))
@@ -59,7 +59,7 @@ public class FSMSkeletonMelee : FSMEnemy
         agent.Stop();
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             yield return null; 
             if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
             {

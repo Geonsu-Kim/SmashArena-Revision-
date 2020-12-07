@@ -22,7 +22,7 @@ public abstract class FSMBase : MonoBehaviour
     public CharacterState characterState;
     public Health health;
     public bool Invincibility { get { return invincibility; } }
-    public bool isDead { get { return m_state == State.Dead; } }
+    public bool isDead() { return m_state == State.Dead; }
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
@@ -69,13 +69,14 @@ public abstract class FSMBase : MonoBehaviour
         isNewState = true;
         m_state = newState;
         animator.SetTrigger(newState.ToString());
-        animator.SetInteger(stringParam, (int)m_state);
     }
     IEnumerator FSMMain()
     {
         while (true)
         {
             isNewState = false;
+            if(health.IsDead())
+                yield return StartCoroutine(Dead());
             yield return StartCoroutine(m_state.ToString());
         }
     }

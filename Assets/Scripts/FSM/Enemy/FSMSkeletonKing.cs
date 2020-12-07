@@ -64,7 +64,7 @@ public class FSMSkeletonKing : FSMEnemy
     {
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             yield return null;
             if (!DistanceCheck(player.transform.position, characterState.AttackRange))
             {
@@ -80,7 +80,7 @@ public class FSMSkeletonKing : FSMEnemy
     {
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             agent.TraceTarget(Player.transform.position);
             yield return null;
             if (DistanceCheck(player.transform.position, characterState.ChasingRange))
@@ -109,7 +109,7 @@ public class FSMSkeletonKing : FSMEnemy
         agent.Stop();
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             yield return null;
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
             {
@@ -144,7 +144,7 @@ public class FSMSkeletonKing : FSMEnemy
 
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             yield return null;
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f
                 && animator.GetCurrentAnimatorStateInfo(0).IsName("Skill1"))
@@ -168,7 +168,7 @@ public class FSMSkeletonKing : FSMEnemy
         StartCoroutine(SkillCoolDown(1));
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             yield return null;
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f
                   && animator.GetCurrentAnimatorStateInfo(0).IsName("Skill2"))
@@ -192,7 +192,7 @@ public class FSMSkeletonKing : FSMEnemy
         StartCoroutine(SkillCoolDown(2));
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             yield return null;
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f
                   && animator.GetCurrentAnimatorStateInfo(0).IsName("Skill3"))
@@ -216,7 +216,7 @@ public class FSMSkeletonKing : FSMEnemy
         StartCoroutine(SkillCoolDown(2));
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             yield return null;
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f
                   && animator.GetCurrentAnimatorStateInfo(0).IsName("Skill4"))

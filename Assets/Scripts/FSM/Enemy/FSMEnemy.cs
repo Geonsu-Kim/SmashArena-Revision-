@@ -14,6 +14,10 @@ public  class FSMEnemy : FSMBase
     protected FSMPlayer player;
     protected Agent agent;
     protected new CapsuleCollider collider;
+
+    public string enemyName;
+    public Color NameTxtColor;
+    public GameObject[] DroppingItem;
     public Rigidbody rb;
     public FSMPlayer Player { get { return player; } }
 
@@ -22,6 +26,13 @@ public  class FSMEnemy : FSMBase
     {
         player = GameSceneManager.Instance.Player;
         ObjectPoolManager.Instance.CreateObject("DamageText");
+        if (DroppingItem.Length != 0)
+        {
+            for (int i = 0; i < DroppingItem.Length; i++)
+            {
+                ObjectPoolManager.Instance.CreateObject(DroppingItem[i].name);
+            }
+        }
     }
     protected override void Awake()
     {
@@ -31,23 +42,20 @@ public  class FSMEnemy : FSMBase
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
     }
-    private void Update()
-    {
-        Debug.Log(m_state.ToString());
-    }
+
     public override  void  Damaged(int amount,bool critical=false)
     {
-        if (isDead) return;
+        if (isDead()) return;
         if (critical) amount *= 2;
         health.Damaged(amount);
         ObjectPoolManager.Instance.CallText("DamageText", this.transform.position + Vector3.up * 1.0f, amount);
-        if (EnemyHpbar.Instance.GetActiveSelf()) EnemyHpbar.Instance.TurnOn();
-        EnemyHpbar.Instance.RenewGauge(health.Ratio());
+        UIManager.Instance.RenewEnemyUI(ref NameTxtColor,ref enemyName,health.Ratio());
+        
         StartCoroutine(ColorByHit());
         if (health.IsDead())
         {
             SetStateTrigger(State.Dead);
-            EnemyHpbar.Instance.TurnOff();
+            UIManager.Instance.EnemyInfo.SetActive(false);
         }
     }
     public bool DistanceCheck(Vector3 target, float dist)
@@ -78,9 +86,9 @@ public  class FSMEnemy : FSMBase
         agent.Stop();
         do
         {
-            if (isDead) break;
+            if (isDead()) break;
             yield return null;
-            if (!isDead && DistanceCheck(player.transform.position, 50))
+            if (!isDead() && DistanceCheck(player.transform.position, 50))
             {
                 SetState(State.Run);
             }
@@ -111,7 +119,12 @@ public  class FSMEnemy : FSMBase
         {
             colliders[i].enabled = false;
         }
-        yield return YieldInstructionCache.WaitForSeconds(2.0f);
+        float t = 0;
+        while (t < 2f)
+        {
+            yield return null;
+            t += Time.deltaTime * Time.timeScale;
+        }
         float amount = 0;
         do
         {

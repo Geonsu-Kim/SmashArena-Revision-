@@ -77,10 +77,10 @@ public class FSMPlayer : FSMBase
     }
     public override void Damaged(int amount, bool critical = false)
     {
-        if (isDead) return;
+        if (isDead()) return;
 
         health.Damaged(amount * coef_BaseDefense);
-        PlayerHpbar.Instance.RenewGauge(health.Ratio());
+        UIManager.Instance.RenewPlayerUI(ref UIManager.Instance.PlayerHpBar,health.Ratio());
         StartCoroutine(ColorByHit());
         if (health.IsDead())
         {
@@ -89,10 +89,10 @@ public class FSMPlayer : FSMBase
     }
     public void Recovered(int amount)
     {
-        if (isDead) return;
+        if (isDead()) return;
 
         health.Recovered(amount);
-        PlayerHpbar.Instance.RenewGauge(health.Ratio());
+        UIManager.Instance.RenewPlayerUI(ref UIManager.Instance.PlayerHpBar, health.Ratio());
 
     }
     public void GetBuff(BuffType buff)
@@ -152,6 +152,7 @@ public class FSMPlayer : FSMBase
         while (buffTime_Attack < 10f)
         {
             yield return null;
+            buffTime_Attack += Time.deltaTime * Time.timeScale;
         }
         coef_BaseAtk -= 0.25f;
         buffAttack = false;
@@ -163,6 +164,7 @@ public class FSMPlayer : FSMBase
         while (buffTime_Defense < 10f)
         {
             yield return null;
+            buffTime_Defense += Time.deltaTime * Time.timeScale;
         }
         coef_BaseDefense += 0.25f;
         buffDefense = false;
@@ -174,6 +176,7 @@ public class FSMPlayer : FSMBase
         while (buffTime_Critical < 10f)
         {
             yield return null;
+            buffTime_Critical += Time.deltaTime * Time.timeScale;
         }
         coef_CriticalAtk -= 0.1f;
         buffCritical = false;
@@ -185,6 +188,7 @@ public class FSMPlayer : FSMBase
         while (buffTime_CoolDown < 10f)
         {
             yield return null;
+            buffTime_CoolDown += Time.deltaTime * Time.timeScale;
         }
         coef_SkillCoolDownAll += 0.2f;
         buffCoolDown = false;
