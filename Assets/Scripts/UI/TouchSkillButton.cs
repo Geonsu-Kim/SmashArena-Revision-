@@ -44,7 +44,7 @@ public class TouchSkillButton : MonoBehaviour
     {
         curCoolTime = 0;
         Icon.fillAmount = 0;
-        float realMaxCoolTime = maxCoolTime * player.coef_SkillCoolDown[skill_ID] * player.coef_SkillCoolDownAll;
+        float realMaxCoolTime = maxCoolTime * GameDataBase.Instance.coef_SkillCoolDown[skill_ID] * GameDataBase.Instance.coef_SkillCoolDownAll;
         while (curCoolTime <realMaxCoolTime )
         {
             curCoolTime += Time.smoothDeltaTime;

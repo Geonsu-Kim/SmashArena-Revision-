@@ -22,15 +22,6 @@ public class FSMPlayer : FSMBase
 
     private Command moveCommand;
     private Command[] skillCommand = new SkillCommand[5];
-    [HideInInspector] public float coef_BaseAtk = 1;
-    [HideInInspector] public float coef_BaseDefense = 1;
-    [HideInInspector] public float coef_MaxHP = 1;
-    [HideInInspector] public float coef_Skill1 = 1;
-    [HideInInspector] public float coef_Skill2 = 1;
-    [HideInInspector] public float coef_Skill3 = 1;
-    [HideInInspector] public float coef_CriticalAtk = 0;
-    [HideInInspector] public float[] coef_SkillCoolDown;
-    [HideInInspector] public float coef_SkillCoolDownAll = 1f;
 
     public StageTrigger stageTrigger;
     public Vector3 Dir = new Vector3(0, 0, 0);
@@ -50,11 +41,7 @@ public class FSMPlayer : FSMBase
         {
             skillCommand[i] = new SkillCommand(i);
         }
-        coef_SkillCoolDown = new float[4];
-        for (int i = 0; i < coef_SkillCoolDown.Length; i++)
-        {
-            coef_SkillCoolDown[i] = 1f;
-        }
+
     }
     private void Start()
     {
@@ -79,8 +66,8 @@ public class FSMPlayer : FSMBase
     {
         if (isDead()) return;
 
-        health.Damaged(amount * coef_BaseDefense);
-        UIManager.Instance.RenewPlayerUI(ref UIManager.Instance.PlayerHpBar,health.Ratio());
+        health.Damaged(amount * GameDataBase.Instance.coef_BaseDefense);
+        RenewHpBar();
         StartCoroutine(ColorByHit());
         if (health.IsDead())
         {
@@ -92,8 +79,13 @@ public class FSMPlayer : FSMBase
         if (isDead()) return;
 
         health.Recovered(amount);
-        UIManager.Instance.RenewPlayerUI(ref UIManager.Instance.PlayerHpBar, health.Ratio());
+        RenewHpBar();
 
+    }
+    public void RenewHpBar()
+    {
+
+        UIManager.Instance.RenewPlayerUI(ref UIManager.Instance.PlayerHpBar, health.Ratio());
     }
     public void GetBuff(BuffType buff)
     {
@@ -147,50 +139,50 @@ public class FSMPlayer : FSMBase
 
     IEnumerator AttackBuff()
     {
-        coef_BaseAtk += 0.25f;
+        GameDataBase.Instance.coef_BaseAtk += 0.25f;
         buffAttack = true;
         while (buffTime_Attack < 10f)
         {
             yield return null;
             buffTime_Attack += Time.deltaTime * Time.timeScale;
         }
-        coef_BaseAtk -= 0.25f;
+        GameDataBase.Instance.coef_BaseAtk -= 0.25f;
         buffAttack = false;
     }
     IEnumerator DefenseBuff()
     {
-        coef_BaseDefense -= 0.25f;
+        GameDataBase.Instance.coef_BaseDefense -= 0.25f;
         buffDefense = true;
         while (buffTime_Defense < 10f)
         {
             yield return null;
             buffTime_Defense += Time.deltaTime * Time.timeScale;
         }
-        coef_BaseDefense += 0.25f;
+        GameDataBase.Instance.coef_BaseDefense += 0.25f;
         buffDefense = false;
     }
     IEnumerator CriticalBuff()
     {
-        coef_CriticalAtk += 0.1f;
+        GameDataBase.Instance.coef_CriticalAtk += 0.1f;
         buffCritical = true;
         while (buffTime_Critical < 10f)
         {
             yield return null;
             buffTime_Critical += Time.deltaTime * Time.timeScale;
         }
-        coef_CriticalAtk -= 0.1f;
+        GameDataBase.Instance.coef_CriticalAtk -= 0.1f;
         buffCritical = false;
     }
     IEnumerator CoolDownBuff()
     {
-        coef_SkillCoolDownAll -= 0.2f;
+        GameDataBase.Instance.coef_SkillCoolDownAll -= 0.2f;
         buffCoolDown = true;
         while (buffTime_CoolDown < 10f)
         {
             yield return null;
             buffTime_CoolDown += Time.deltaTime * Time.timeScale;
         }
-        coef_SkillCoolDownAll += 0.2f;
+        GameDataBase.Instance.coef_SkillCoolDownAll += 0.2f;
         buffCoolDown = false;
     }
 

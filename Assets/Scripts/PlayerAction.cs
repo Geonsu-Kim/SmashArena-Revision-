@@ -58,13 +58,13 @@ public class PlayerAction : MonoBehaviour
 
     public void Skill3()
     {
-        if (player.coef_Skill3 < 4)
+        if (GameDataBase.Instance.coef_Skill3 < 4)
         {
             ObjectPoolManager.Instance.CallObject("Registance"
                 , this.transform.position + Vector3.up * 0.1f
                 , Quaternion.identity
                 , true, 1.0f);
-            Collider[] colls = Physics.OverlapSphere(this.transform.position, 3f * (1 + (0.2f * player.coef_Skill3 - 0.2f)), 1 << 8);
+            Collider[] colls = Physics.OverlapSphere(this.transform.position, 3f * (1 + (0.2f * GameDataBase.Instance.coef_Skill3 - 0.2f)), 1 << 8);
             for (int i = 0; i < colls.Length; i++)
             {
                 FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
@@ -74,7 +74,7 @@ public class PlayerAction : MonoBehaviour
               Quaternion.identity, true, 0.5f);
             }
         }
-        else if(player.coef_Skill3 >=4&& player.coef_Skill3 < 7)
+        else if(GameDataBase.Instance.coef_Skill3 >=4&& GameDataBase.Instance.coef_Skill3 < 7)
         {
 
         }
