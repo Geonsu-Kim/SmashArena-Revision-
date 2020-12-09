@@ -49,11 +49,13 @@ public class PlayerAction : MonoBehaviour
     }
     public void Skill1()
     {
-        player.SetState(State.Skill1);
+            player.SetState(State.Skill1);
+        player.ConsumeMana(player.skillMana[0]);
     }
     public void Skill2()
     {
         player.SetState(State.Skill2);
+        player.ConsumeMana(player.skillMana[1]);
     }
 
     public void Skill3()
@@ -78,6 +80,8 @@ public class PlayerAction : MonoBehaviour
         {
 
         }
+
+        player.ConsumeMana(player.skillMana[2]);
     }
     private bool CheckAction()
     {

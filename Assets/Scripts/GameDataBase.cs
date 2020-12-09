@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameDataBase : SingletonBase<GameDataBase>
 {
     [HideInInspector] public int blueGem;
-    [HideInInspector] public int redGem;
+    [HideInInspector] public int redGem    ;
     [HideInInspector] public int skillUpCount = 0;
     [HideInInspector] public int statUpCount = 0;
     [HideInInspector] public float coef_BaseAtk = 1;

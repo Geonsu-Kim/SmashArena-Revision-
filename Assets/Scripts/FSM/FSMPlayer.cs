@@ -23,6 +23,8 @@ public class FSMPlayer : FSMBase
     private Command moveCommand;
     private Command[] skillCommand = new SkillCommand[5];
 
+    public PlayerMana mana;
+    public float[] skillMana=new float[3];
     public StageTrigger stageTrigger;
     public Vector3 Dir = new Vector3(0, 0, 0);
     public CharacterController m_cc;
@@ -74,18 +76,31 @@ public class FSMPlayer : FSMBase
             SetStateTrigger(State.Dead);
         }
     }
-    public void Recovered(int amount)
+    public void RecoverHP(int amount)
     {
         if (isDead()) return;
-
         health.Recovered(amount);
         RenewHpBar();
-
+    }
+    public void ConsumeMana(float amount)
+    {
+        if (isDead()) return;
+        mana.Consume(amount);
+        RenewMpBar();
+    }
+    public void RecoverMP(float amount)
+    {
+        if (isDead()) return;
+        mana.Recovered(amount);
+        RenewMpBar();
     }
     public void RenewHpBar()
     {
-
         UIManager.Instance.RenewPlayerUI(ref UIManager.Instance.PlayerHpBar, health.Ratio());
+    }
+    public void RenewMpBar()
+    {
+        UIManager.Instance.RenewPlayerUI(ref UIManager.Instance.PlayerMpBar, mana.Ratio());
     }
     public void GetBuff(BuffType buff)
     {
@@ -129,10 +144,11 @@ public class FSMPlayer : FSMBase
         switch (potion)
         {
             case PotionType.HP:
-                Recovered(amount);
+                RecoverHP(amount);
                 break;
             case PotionType.MP:
                 amount /= 5;
+                RecoverMP(amount);
                 break;
         }
     }
