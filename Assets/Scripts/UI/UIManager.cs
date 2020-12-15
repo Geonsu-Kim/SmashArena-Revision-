@@ -11,24 +11,7 @@ public class UIManager :SingletonBase<UIManager>
     public Image PlayerHpBar;
     public Image PlayerMpBar;
 
-    public Image[] SkillImage;
 
-    private void Update()
-    {
-        for (int i = 0; i < SkillImage.Length; i++)
-        {
-            if (GameSceneManager.Instance.Player.mana.CheckLeftMana(GameSceneManager.Instance.Player.skillMana[i]))
-            {
-                SkillImage[i].raycastTarget = true;
-                SkillImage[i].color = Color.white;
-            }
-            else
-            {
-                SkillImage[i].raycastTarget = false;
-                SkillImage[i].color = Color.white*0.25f;
-            }
-        }
-    }
     public void RenewPlayerUI(ref Image image,float ratio)
     {
         image.fillAmount = ratio;

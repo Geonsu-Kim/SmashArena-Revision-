@@ -7,7 +7,6 @@ public class TouchSkillButton : MonoBehaviour
     [SerializeField]
     private int skill_ID;
     [SerializeField]
-    private float maxCoolTime;
     private float curCoolTime=0;
     private bool coolDown=false;
     private Image Icon;
@@ -20,10 +19,22 @@ public class TouchSkillButton : MonoBehaviour
         button = GetComponent<Button>();
         button.onClick.AddListener(SkillButtonDown);
     }
-
+    private void Update()
+    {
+        if (GameSceneManager.Instance.Player.mana.CheckLeftMana(GameSceneManager.Instance.Player.skills[skill_ID].Mana))
+        {
+            Icon.raycastTarget = true;
+            Icon.color = Color.white;
+        }
+        else
+        {
+            Icon.raycastTarget = false;
+            Icon.color = Color.white * 0.25f;
+        }
+    }
     public  void SkillButtonDown()
     {
-        if (skill_ID== 4)
+        if (skill_ID== 0)
         {
             player.Action(skill_ID);
         }
@@ -44,10 +55,10 @@ public class TouchSkillButton : MonoBehaviour
     {
         curCoolTime = 0;
         Icon.fillAmount = 0;
-        float realMaxCoolTime = maxCoolTime * GameDataBase.Instance.coef_SkillCoolDown[skill_ID] * GameDataBase.Instance.coef_SkillCoolDownAll;
+        float realMaxCoolTime = player.skills[skill_ID].CoolTime * (1-player.CheckBuff(player.BuffCoolDown));
         while (curCoolTime <realMaxCoolTime )
         {
-            curCoolTime += Time.smoothDeltaTime;
+            curCoolTime += Time.smoothDeltaTime*Time.timeScale;
             Icon.fillAmount = curCoolTime / realMaxCoolTime;
             yield return null;
         }

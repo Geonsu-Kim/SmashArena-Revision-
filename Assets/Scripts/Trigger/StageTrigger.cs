@@ -80,8 +80,8 @@ public class StageTrigger : MonoBehaviour
                 }
             }
             yield return null;
-            time += Time.deltaTime;
-            timeInterval += Time.deltaTime;
+            time += Time.deltaTime*Time.timeScale;
+            timeInterval += Time.deltaTime * Time.timeScale;
         }
         yield return StartCoroutine(CheckMonster());
         for (int i = 0; i < Doors_Cur.Count; i++)
@@ -92,7 +92,8 @@ public class StageTrigger : MonoBehaviour
         {
             Doors_Next[i].Open();
         }
-        player.Damaged((int)player.health.MaxHP*-1);
+        player.RecoverHP((int)player.health.MaxHP);
+        player.RecoverMP((int)player.mana.MaxMP);
         GameSceneManager.Instance.OnBattle = false;
 
     }

@@ -19,6 +19,7 @@ public class GameSceneManager : SingletonBase<GameSceneManager>
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<FSMPlayer>();
         cam= GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowCam>();
         canvas = GameObject.Find("Canvas");
+        SkillData.Init();
     }
     private void Start()
     {

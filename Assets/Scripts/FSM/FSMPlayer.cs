@@ -19,19 +19,29 @@ public class FSMPlayer : FSMBase
     private float buffTime_Critical = 0;
     private float buffTime_CoolDown = 0;
 
-
     private Command moveCommand;
-    private Command[] skillCommand = new SkillCommand[5];
+    private Command[] skillCommands;
 
-    public PlayerMana mana;
-    public float[] skillMana=new float[3];
-    public StageTrigger stageTrigger;
     public Vector3 Dir = new Vector3(0, 0, 0);
+    public List<Skill> skills;
+    public PlayerMana mana;
+    public StageTrigger stageTrigger;
     public CharacterController m_cc;
+    [HideInInspector] public int blueGem;
+    [HideInInspector] public int redGem;
+    [HideInInspector] public int cri_Level;
+    [HideInInspector] public int def_Level;
     public bool CanRun { get { return canRun; } }
     public bool ComboOnOff { get { return comboOnOff; } set { comboOnOff = value; } }
     public bool IsInStageBtn { get { return isInStageBtn; } set { isInStageBtn = value; } }
 
+
+    public bool BuffAttack { get { return buffAttack; } }
+    public bool BuffDefense { get { return buffDefense; } }
+    public bool BuffCritical { get { return buffCritical; } }
+    public bool BuffCoolDown { get { return buffCoolDown; } }
+
+    public float CheckBuff(bool buff) { if (buff) return 0.25f; else return 0f; }
 
     protected override void Awake()
     {
@@ -39,17 +49,20 @@ public class FSMPlayer : FSMBase
         DontDestroyOnLoad(gameObject);
         m_cc = GetComponent<CharacterController>();
         moveCommand = new MoveCommand();
-        for (int i = 0; i < skillCommand.Length; i++)
+        skillCommands = new SkillCommand[5];
+        for (int i = 0; i < skillCommands.Length; i++)
         {
-            skillCommand[i] = new SkillCommand(i);
+            skillCommands[i] = new SkillCommand(i);
         }
 
+        skills = new List<Skill>();
     }
     private void Start()
     {
         ObjectPoolManager.Instance.CreateObject("Crasher", 1);
         ObjectPoolManager.Instance.CreateObject("OverpoweredSlash");
         ObjectPoolManager.Instance.CreateObject("Registance", 1);
+        PlayerInBattleIO.LoadData();
     }
     private void Update()
     {
@@ -68,7 +81,7 @@ public class FSMPlayer : FSMBase
     {
         if (isDead()) return;
 
-        health.Damaged(amount * GameDataBase.Instance.coef_BaseDefense);
+        health.Damaged(amount * (1-(0.05f*def_Level)-CheckBuff(buffDefense)));
         RenewHpBar();
         StartCoroutine(ColorByHit());
         if (health.IsDead())
@@ -167,47 +180,39 @@ public class FSMPlayer : FSMBase
     }
     IEnumerator DefenseBuff()
     {
-        GameDataBase.Instance.coef_BaseDefense -= 0.25f;
         buffDefense = true;
         while (buffTime_Defense < 10f)
         {
             yield return null;
             buffTime_Defense += Time.deltaTime * Time.timeScale;
         }
-        GameDataBase.Instance.coef_BaseDefense += 0.25f;
         buffDefense = false;
     }
     IEnumerator CriticalBuff()
     {
-        GameDataBase.Instance.coef_CriticalAtk += 0.1f;
         buffCritical = true;
         while (buffTime_Critical < 10f)
         {
             yield return null;
             buffTime_Critical += Time.deltaTime * Time.timeScale;
         }
-        GameDataBase.Instance.coef_CriticalAtk -= 0.1f;
         buffCritical = false;
     }
     IEnumerator CoolDownBuff()
     {
-        GameDataBase.Instance.coef_SkillCoolDownAll -= 0.2f;
         buffCoolDown = true;
         while (buffTime_CoolDown < 10f)
         {
             yield return null;
             buffTime_CoolDown += Time.deltaTime * Time.timeScale;
         }
-        GameDataBase.Instance.coef_SkillCoolDownAll += 0.2f;
         buffCoolDown = false;
     }
 
     public void Action(int num)
     {
-        skillCommand[num].Execute(this.gameObject);
+        skillCommands[num].Execute(this.gameObject);
     }
-
-
     public void SetDir(Vector2 dir)//방향키 입력 여부
     {
         Dir.x = dir.x;

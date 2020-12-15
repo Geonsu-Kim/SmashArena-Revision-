@@ -16,14 +16,7 @@ public class SkillCommand : Command
         action = obj.GetComponent<PlayerAction>();
         if (action != null)
         {
-            switch (m_num)
-            {
-                case 0: action.Skill1(); break;
-                case 1: action.Skill2(); break;
-                case 2: action.Skill3(); break;
-                case 3: action.Roll();   break;
-                case 4: action.Attack(); break;
-            }
+            action.UseSkill(m_num);
             return true;
         }
         else return false;

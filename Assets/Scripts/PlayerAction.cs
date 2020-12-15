@@ -15,6 +15,18 @@ public class PlayerAction : MonoBehaviour
     {
         player = GetComponent<FSMPlayer>();
     }
+    public void UseSkill(int num)
+    {
+        switch (num)
+        {
+            case 0: Attack(); break;
+            case 1: Roll(); break;
+            case 2: Slash(); break;
+            case 3: Crash(); break;
+            case 4: Light(); break;
+
+        }
+    }
     public void Attack()
     {
         if (GameSceneManager.Instance.OnBattle)
@@ -47,26 +59,27 @@ public class PlayerAction : MonoBehaviour
     {
         player.SetState(State.Roll);
     }
-    public void Skill1()
+    public void Slash()
     {
-            player.SetState(State.Skill1);
-        player.ConsumeMana(player.skillMana[0]);
+        player.SetState(State.Skill1);
+        player.ConsumeMana(player.skills[2].Mana);
+
     }
-    public void Skill2()
+    public void Crash()
     {
         player.SetState(State.Skill2);
-        player.ConsumeMana(player.skillMana[1]);
+        player.ConsumeMana(player.skills[3].Mana);
     }
-
-    public void Skill3()
+  
+    public void Light()
     {
-        if (GameDataBase.Instance.coef_Skill3 < 4)
+        if (player.skills[4].Level < 4)
         {
             ObjectPoolManager.Instance.CallObject("Registance"
                 , this.transform.position + Vector3.up * 0.1f
                 , Quaternion.identity
                 , true, 1.0f);
-            Collider[] colls = Physics.OverlapSphere(this.transform.position, 3f * (1 + (0.2f * GameDataBase.Instance.coef_Skill3 - 0.2f)), 1 << 8);
+            Collider[] colls = Physics.OverlapSphere(this.transform.position, 3f, 1 << 8);
             for (int i = 0; i < colls.Length; i++)
             {
                 FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
@@ -76,12 +89,12 @@ public class PlayerAction : MonoBehaviour
               Quaternion.identity, true, 0.5f);
             }
         }
-        else if(GameDataBase.Instance.coef_Skill3 >=4&& GameDataBase.Instance.coef_Skill3 < 7)
+        else if(player.skills[4].Level >=4&& player.skills[4].Level < 7)
         {
 
         }
 
-        player.ConsumeMana(player.skillMana[2]);
+        player.ConsumeMana(player.skills[4].Mana);
     }
     private bool CheckAction()
     {
