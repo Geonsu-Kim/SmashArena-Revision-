@@ -7,7 +7,7 @@ public class FSMPlayer : FSMBase
 {
     private bool comboOnOff = false;
     private bool canRun = true;
-    private bool isInStageBtn = false;
+    private int btnNum = 0;
 
     private bool buffAttack = false;
     private bool buffDefense = false;
@@ -22,31 +22,33 @@ public class FSMPlayer : FSMBase
     private Command moveCommand;
     private Command[] skillCommands;
 
-    public Vector3 Dir = new Vector3(0, 0, 0);
+    public Vector3 Dir;
+    public Vector3 StartPos;
     public List<Skill> skills;
     public PlayerMana mana;
-    public StageTrigger stageTrigger;
     public CharacterController m_cc;
     [HideInInspector] public int blueGem;
     [HideInInspector] public int redGem;
     [HideInInspector] public int cri_Level;
     [HideInInspector] public int def_Level;
+    [HideInInspector] public StageTrigger stageTrigger;
+    [HideInInspector] public PortalTrigger portal;
     public bool CanRun { get { return canRun; } }
     public bool ComboOnOff { get { return comboOnOff; } set { comboOnOff = value; } }
-    public bool IsInStageBtn { get { return isInStageBtn; } set { isInStageBtn = value; } }
+    public int BtnNum { get { return btnNum; } set { btnNum = value; } }
 
 
     public bool BuffAttack { get { return buffAttack; } }
     public bool BuffDefense { get { return buffDefense; } }
     public bool BuffCritical { get { return buffCritical; } }
     public bool BuffCoolDown { get { return buffCoolDown; } }
-
     public float CheckBuff(bool buff) { if (buff) return 0.25f; else return 0f; }
 
+    public bool LevelUpDef() { if (def_Level < 5) { def_Level++; return true; } else { return false; }  }
+    public bool LevelUpCri() { if(cri_Level<5){cri_Level++; return true; } else { return false; }   }
     protected override void Awake()
     {
         base.Awake();
-        DontDestroyOnLoad(gameObject);
         m_cc = GetComponent<CharacterController>();
         moveCommand = new MoveCommand();
         skillCommands = new SkillCommand[5];
@@ -59,9 +61,6 @@ public class FSMPlayer : FSMBase
     }
     private void Start()
     {
-        ObjectPoolManager.Instance.CreateObject("Crasher", 1);
-        ObjectPoolManager.Instance.CreateObject("OverpoweredSlash");
-        ObjectPoolManager.Instance.CreateObject("Registance", 1);
         PlayerInBattleIO.LoadData();
     }
     private void Update()
@@ -77,7 +76,7 @@ public class FSMPlayer : FSMBase
             yield return null;
         } while (!isNewState);
     }
-    public override void Damaged(int amount, bool critical = false)
+    public override void Damaged(float amount, bool critical = false)
     {
         if (isDead()) return;
 
@@ -117,37 +116,48 @@ public class FSMPlayer : FSMBase
     }
     public void GetBuff(BuffType buff)
     {
+        sb.Length = 0;
         switch (buff)
         {
             case BuffType.AttackUp:
+                sb.Append("Attack Up!");
                 if (buffAttack) buffTime_Attack = 0; else StartCoroutine(AttackBuff());
                 break;
             case BuffType.DefenseUp:
+                sb.Append("Defense Up!");
                 if (buffDefense) buffTime_Defense = 0; else StartCoroutine(DefenseBuff());
                 break;
             case BuffType.CriticalUp:
+                sb.Append("Critical Up!");
                 if (buffCritical) buffTime_Critical = 0; else StartCoroutine(CriticalBuff());
                 break;
             case BuffType.CooltimeDown:
+                sb.Append("Cooltime Down!");
                 if (buffCoolDown) buffTime_CoolDown = 0; else StartCoroutine(CoolDownBuff());
                 break;
         }
+        ObjectPoolManager.Instance.CallText("Text", this.transform.position + Vector3.up * 1.0f, sb.ToString());
     }
     public void GetGoods(GoodsType goods,int amount)
     {
+        sb.Length = 0;
         switch (goods)
         {
             case GoodsType.BlueGem:
-                GameDataBase.Instance.blueGem += amount;
+                sb.Append("Get BlueGem!");
+                blueGem += amount;
                 break;
             case GoodsType.RedGem:
-                GameDataBase.Instance.redGem += amount;
+                sb.Append("Red BlueGem!");
+                redGem += amount;
                 break;
         }
+        ObjectPoolManager.Instance.CallText("Text", this.transform.position + Vector3.up * 1.0f, sb.ToString());
     }
     public void GetPotion(PotionType potion,int level)
     {
         int amount = 0;
+        sb.Length = 0;
         switch (level)
         {
             case 1: amount = 1500; break;
@@ -164,49 +174,61 @@ public class FSMPlayer : FSMBase
                 RecoverMP(amount);
                 break;
         }
+        sb.Append(potion.ToString()).Append(" +").Append(amount.ToString());
+        ObjectPoolManager.Instance.CallText("Text", this.transform.position + Vector3.up * 1.0f, sb.ToString());
     }
 
     IEnumerator AttackBuff()
     {
-        GameDataBase.Instance.coef_BaseAtk += 0.25f;
+        UIManager.Instance.SignalOn(0);
         buffAttack = true;
         while (buffTime_Attack < 10f)
         {
             yield return null;
             buffTime_Attack += Time.deltaTime * Time.timeScale;
         }
-        GameDataBase.Instance.coef_BaseAtk -= 0.25f;
+        buffTime_Attack = 0;
         buffAttack = false;
+        UIManager.Instance.SignalOff(0);
     }
     IEnumerator DefenseBuff()
     {
+        UIManager.Instance.SignalOn(1);
         buffDefense = true;
         while (buffTime_Defense < 10f)
         {
             yield return null;
             buffTime_Defense += Time.deltaTime * Time.timeScale;
         }
-        buffDefense = false;
+        buffTime_Defense = 0;
+       buffDefense = false;
+        UIManager.Instance.SignalOff(1);
     }
     IEnumerator CriticalBuff()
     {
+        UIManager.Instance.SignalOn(2);
         buffCritical = true;
         while (buffTime_Critical < 10f)
         {
             yield return null;
             buffTime_Critical += Time.deltaTime * Time.timeScale;
         }
-        buffCritical = false;
+        buffTime_Critical = 0;
+       buffCritical = false;
+        UIManager.Instance.SignalOff(2);
     }
     IEnumerator CoolDownBuff()
     {
+        UIManager.Instance.SignalOn(3);
         buffCoolDown = true;
         while (buffTime_CoolDown < 10f)
         {
             yield return null;
             buffTime_CoolDown += Time.deltaTime * Time.timeScale;
         }
-        buffCoolDown = false;
+        buffTime_CoolDown = 0;
+       buffCoolDown = false;
+        UIManager.Instance.SignalOff(3);
     }
 
     public void Action(int num)
