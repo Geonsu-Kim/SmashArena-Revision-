@@ -25,7 +25,7 @@ public class FollowCam : MonoBehaviour
         _forward = originForward;
         _right = originRight;
         _damp = originDamp;
-        targetTr = GameSceneManager.Instance.Player.transform;
+        targetTr = PlayerManager.Instance.Player.transform;
     }
     private void LateUpdate()
     {
