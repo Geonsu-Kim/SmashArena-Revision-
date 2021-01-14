@@ -1,22 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 public class StageTrigger : MonoBehaviour
 {    [SerializeField]
     private float battleTime;
     [SerializeField]
     private float spawnInterval;
+    [SerializeField]
+    private float bossAppearTime;
     private FSMPlayer player;
     private ParticleSystem ps;
     private BoxCollider box;
     private Collider[] hits;
 
+    public UnityEvent StartEvent;
+    public UnityEvent BossEvent;
+    public UnityEvent EndEvent;
+    
+    
+    
     public EnemySpawn[] enemySpawn;
-    [HideInInspector]
-    public List<Door> Doors_Cur;
-    [HideInInspector]
-    public List<Door> Doors_Next;
+
+    [HideInInspector]  public List<Door> Doors_Cur;
+    [HideInInspector]  public List<Door> Doors_Next;
     private void Awake()
     {
         box = GetComponent<BoxCollider>();
@@ -38,7 +45,7 @@ public class StageTrigger : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             player=other.gameObject.GetComponent<FSMPlayer>();
-            player.IsInStageBtn = true;
+            player.BtnNum = 1;
             player.stageTrigger = this;
         }
     }
@@ -47,18 +54,22 @@ public class StageTrigger : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             player = other.gameObject.GetComponent<FSMPlayer>();
-            player.IsInStageBtn = false;
+            player.BtnNum = 0;
             player.stageTrigger = null;
         }
     }
     public void StartBattle()
     {
-        GameSceneManager.Instance.OnBattle = true;
+        PlayerManager.Instance.OnBattle = true;
         box.enabled = false;
         player.stageTrigger = null;
-        player.IsInStageBtn = false;
+        player.BtnNum = 0;
         ps.Stop();
         StartCoroutine(OnBattle());
+        if (BossEvent != null)
+        {
+            StartCoroutine(BossAppearence());
+        }
         for (int i = 0; i < Doors_Cur.Count; i++)
         {
             Doors_Cur[i].Close();
@@ -66,9 +77,12 @@ public class StageTrigger : MonoBehaviour
     }
     private IEnumerator OnBattle()
     {
+        if (StartEvent != null)
+        {
+            StartEvent.Invoke();
+        }
         float time = 0f;
         float timeInterval = 0f;
-        
         while(time<= battleTime)
         {
             if (timeInterval >= spawnInterval)
@@ -94,8 +108,21 @@ public class StageTrigger : MonoBehaviour
         }
         player.RecoverHP((int)player.health.MaxHP);
         player.RecoverMP((int)player.mana.MaxMP);
-        GameSceneManager.Instance.OnBattle = false;
-
+        PlayerManager.Instance.OnBattle = false;
+        if (EndEvent != null)
+        {
+            EndEvent.Invoke();
+        }
+    }
+    private IEnumerator BossAppearence()
+    {
+        float t = 0f;
+        while (t<bossAppearTime)
+        {
+            yield return null;
+            t += Time.deltaTime * Time.timeScale;
+        }
+        BossEvent.Invoke();
     }
     private IEnumerator CheckMonster()
     {
