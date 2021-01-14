@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,7 +29,7 @@ public class PlayerAction : MonoBehaviour
     }
     public void Attack()
     {
-        if (GameSceneManager.Instance.OnBattle)
+        if (PlayerManager.Instance.OnBattle)
         {
             player.ComboOnOff = true;
             if (player.IsStanding())
@@ -43,15 +43,32 @@ public class PlayerAction : MonoBehaviour
         }
         else
         {
-            if (player.IsInStageBtn&&player.stageTrigger!=null)
+            switch (player.BtnNum)
             {
-                Time.timeScale = 0;
-                DialogDataYesNo data = new DialogDataYesNo("Start the Game?", delegate (bool b) {
-                    if (b) { player.stageTrigger.StartBattle(); }
-                    Time.timeScale = 1;
-                });
-                DialogManager.Instance.Push(data);
+                case 0:
+                    break;
+                case 1:
+                    if (player.stageTrigger != null)
+                    {
+                        Time.timeScale = 0;
+                        DialogManager.Instance.Push(new DialogDataYesNo("Start the Game?", delegate (bool b)
+                        {
+                            if (b) { player.stageTrigger.StartBattle(); }
+                            Time.timeScale = 1;
+                        }));
+                    }
+                    break;
+                case 2:
+                    Time.timeScale = 0;
+                    DialogManager.Instance.Push(new DialogDataYesNo("Want to Move to Boss Room?", delegate (bool b) {
+                        if (b) {
+                            player.portal.MoveToNextScene();
+                        }
+                        Time.timeScale = 1;
+                    }));
+                    break;
             }
+            
         }
 
     }
@@ -75,7 +92,7 @@ public class PlayerAction : MonoBehaviour
     {
         if (player.skills[4].Level < 4)
         {
-            ObjectPoolManager.Instance.CallObject("Registance"
+            ObjectPoolManager.Instance.CallObject("Light"
                 , this.transform.position + Vector3.up * 0.1f
                 , Quaternion.identity
                 , true, 1.0f);
@@ -89,7 +106,7 @@ public class PlayerAction : MonoBehaviour
               Quaternion.identity, true, 0.5f);
             }
         }
-        else if(player.skills[4].Level >=4&& player.skills[4].Level < 7)
+        else
         {
 
         }
