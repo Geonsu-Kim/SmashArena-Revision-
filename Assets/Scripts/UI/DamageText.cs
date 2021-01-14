@@ -32,5 +32,6 @@ public class DamageText : MonoBehaviour
         transform.Translate(new Vector3(0, moveSpeed * Time.deltaTime, 0)); // 텍스트 위치
         changedColor.a = Mathf.Lerp(originColor.a, 0, time); // 텍스트 알파값
         text.color = changedColor;
+        if (changedColor.a <= 0f) this.gameObject.SetActive(false);
     }
 }
