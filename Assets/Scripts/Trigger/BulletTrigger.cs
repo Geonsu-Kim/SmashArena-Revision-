@@ -5,18 +5,15 @@ using UnityEngine;
 
 public class BulletTrigger : EffectTrigger
 {
+    [SerializeField] private bool canFierceObj=false;
     private Rigidbody rb;
-    public bool deact;
-    public float time;
+    public float hitEffectTime;
     public Vector3 forceDir;
     public GameObject hit;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        if (hit != null)
-        {
-            ObjectPoolManager.Instance.CreateObject(hit.name, 1);
-        }
     }
     private void OnEnable()
     {
@@ -31,13 +28,13 @@ public class BulletTrigger : EffectTrigger
             FSMBase fSM = other.gameObject.GetComponent<FSMBase>();
             fSM.Damaged(damageScalar);
         }
-        else if (other.gameObject.CompareTag("StaticObj"))
+        else if (other.gameObject.CompareTag("StaticObj")&& !canFierceObj)
         {
             this.gameObject.SetActive(false);
 
             if (hit != null)
             {
-                ObjectPoolManager.Instance.CallObject(hit.name, this.transform.position+Vector3.up*0.25f,Quaternion.identity, deact, time);
+                ObjectPoolManager.Instance.CallObject(hit.name, this.transform.position+Vector3.up*0.25f,Quaternion.identity, true, hitEffectTime);
 
             }
         }
