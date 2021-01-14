@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public abstract class FSMBase : MonoBehaviour
@@ -10,6 +11,7 @@ public abstract class FSMBase : MonoBehaviour
 
     protected bool invincibility = false;
     protected bool isNewState;
+    
 
     [SerializeField]
     protected State m_state;
@@ -19,6 +21,7 @@ public abstract class FSMBase : MonoBehaviour
     protected List<Material> mats;//skin,mesh
     protected Color originalColor = new Color(0, 0, 0);
 
+    public StringBuilder sb;
     public CharacterState characterState;
     public Health health;
     public bool Invincibility { get { return invincibility; } }
@@ -29,6 +32,7 @@ public abstract class FSMBase : MonoBehaviour
         skin = GetComponentsInChildren<SkinnedMeshRenderer>();
         mesh = GetComponentsInChildren<MeshRenderer>();
         mats = new List<Material>();
+        sb = new StringBuilder(64);
         for (int i = 0; i < skin.Length; i++)
         {
             for (int j = 0; j < skin[i].materials.Length; j++)
@@ -57,7 +61,7 @@ public abstract class FSMBase : MonoBehaviour
             mats[i].SetColor("_Emission", color);
         }
     }
-    public abstract void Damaged(int amount,bool critical=false);
+    public abstract void Damaged(float amount,bool critical=false);
     public void SetState(State newState)
     {
         isNewState = true;
