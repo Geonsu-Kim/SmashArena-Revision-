@@ -5,72 +5,87 @@ using UnityEngine;
 public class SkeletonKingAnimEvent : EnemyAnimationEvent
 {
 
-    public Transform[] ThunderFallPts;
+    private Vector3[] ExplosionPos=new Vector3[5];
+
+    public GameObject kingShield;
     private void Skeleton_KingAttackStart(AnimationEvent animationEvent)
     {
-        EnabledCollider(animationEvent.intParameter);
+        WeaponOn(0);
     }
 
     private void Skeleton_KingAttackEnd(AnimationEvent animationEvent)
     {
-        DisabledCollider(animationEvent.intParameter);
+        WeaponOff(0);
     }
     private void WaveAttack()
     {
-        ObjectPoolManager.Instance.CallObject("WaveAttack", this.transform.position + Vector3.up * 0.1f, Quaternion.identity, true, 1.5f);
-
+        ObjectPoolManager.Instance.CallObject("WaveAttack", this.transform.position + Vector3.up * 0.1f, this.transform.rotation*Quaternion.Euler(0f,0f,90f), true, 4f);
+    }
+    private void DarkExplosionMark()
+    {
+        StartCoroutine(Targeting());
     }
     private void DarkExplosion()
     {
 
-        StartCoroutine(DarkExplosionCoroutine());
+        StartCoroutine(ExcuteExplosion());
     }
     private void KingBuff()
     {
-        ObjectPoolManager.Instance.CallObject("InfantryBuff", this.transform.position + Vector3.up * 0.2f, Quaternion.identity, true, 2.0f);
-        StartCoroutine(Enemy.Buff());
+        ObjectPoolManager.Instance.CallObject("Rage", this.transform.position + Vector3.up * 0.2f, Quaternion.Euler(90f,0f,0f), true, 2.0f);
+        StartCoroutine(Enemy.Buff(2f));
     }
-    private void DarkThunderFallReady()
+    private void KingShield()
     {
-
-        StartCoroutine(DarkThunderFallCoroutine(false));
+        StartCoroutine(UsingKingShield());
     }
-
-    private void DarkThunderFall ()
+    IEnumerator Targeting()
     {
-        StartCoroutine(DarkThunderFallCoroutine(true));
-    }
-    IEnumerator DarkExplosionCoroutine()
-    {
-        Vector3 pos = GameSceneManager.Instance.Player.transform.position + Vector3.up * 0.1f;
-        ObjectPoolManager.Instance.CallObject("SkillMark", pos, Quaternion.identity, true, 1.5f);
-
-        yield return YieldInstructionCache.WaitForSeconds(2.0f);
-
-        ObjectPoolManager.Instance.CallObject("DarkExplosion", pos, Quaternion.identity, true, 1.5f);
-    }
-    IEnumerator DarkThunderFallCoroutine(bool attack)
-    {
-        if (attack)
+        for (int k = 0; k < ExplosionPos.Length; k++)
         {
-            yield return YieldInstructionCache.WaitForSeconds(0.5f);
-            for (int j = 0; j < 2; j++)
+            float t = 0;
+            ExplosionPos[k] = PlayerManager.Instance.Player.transform.position;
+            ObjectPoolManager.Instance.CallObject("SkillMark_King", ExplosionPos[k] + Vector3.up * 0.1f, Quaternion.identity, true, 2f);
+            while(t<0.33f)
             {
-
-                for (int i = 0; i < ThunderFallPts.Length; i++)
-                {
-                    yield return YieldInstructionCache.WaitForSeconds(0.1f);
-                    ObjectPoolManager.Instance.CallObject("DarkThunderFall", ThunderFallPts[i].position, Quaternion.Euler(60, -90, -90));
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < ThunderFallPts.Length; i++)
-            {
-                yield return YieldInstructionCache.WaitForSeconds(0.1f);
-                ObjectPoolManager.Instance.CallObject("SkillMark", ThunderFallPts[i].position + Vector3.up * 0.1f, Quaternion.identity, true, 1.5f);
+                yield return null;
+                t += Time.deltaTime * Time.timeScale;
             }
         }
     }
+    IEnumerator ExcuteExplosion()
+    {
+        for (int k = 0; k < ExplosionPos.Length; k++)
+        {
+            float t = 0;
+            ObjectPoolManager.Instance.CallObject("Explosion", ExplosionPos[k] + Vector3.up * 0.1f, Quaternion.Euler(-90f, 0f, 0f), true, 2f);
+            checkedColliders = OverLapRaycast.CheckSphere(1.5f, ExplosionPos[k]);
+            for (int i = 0; i < checkedColliders.Length; i++)
+            {
+                FSMPlayer player = checkedColliders[i].gameObject.GetComponent<FSMPlayer>();
+                if (player != null)
+                    player.Damaged(3000);
+            }
+            while (t < 0.33f)
+            {
+                yield return null;
+                t += Time.deltaTime * Time.timeScale;
+            }
+        }
+    }
+    IEnumerator UsingKingShield()
+    {
+        kingShield.SetActive(true);
+        Enemy.defenseBuff = true;
+        float t = 0;
+        while (t < 15f)
+        {
+            t += Time.deltaTime * Time.timeScale;
+            yield return null;
+        }
+
+        Enemy.defenseBuff = false;
+        kingShield.SetActive(false); ;
+    }
+   
 }

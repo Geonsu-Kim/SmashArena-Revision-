@@ -5,25 +5,27 @@ using UnityEngine;
 public class EnemyAnimationEvent : MonoBehaviour
 {
     protected FSMEnemy Enemy;
-    protected FSMPlayer Player;
-    protected Collider[] colliders;
-
+    protected Collider[] checkedColliders;
+    protected  Collider[] Weapon;
+    public  EnemySkillIcon skillIcon;
     // Start is called before the first frame update
     protected void Start()
     {
         Enemy = GetComponent<FSMEnemy>();
-        Player = Enemy.Player;
-        colliders = Enemy.colliders;
+        Weapon = Enemy.Weapon;
     }
-    protected void EnabledCollider(int num)
+    protected void ShowSkill(AnimationEvent @event)
     {
-        colliders[num].enabled = true;
+        if (skillIcon != null) {
+            skillIcon.SetIcon(@event.intParameter);
+                }
     }
-    protected void DisabledCollider(int num)
+    protected void WeaponOn(int num)
     {
-        colliders[num].enabled = false;
+        Weapon[num].enabled=true;
     }
-
-
-    
+    protected void WeaponOff(int num)
+    {
+        Weapon[num].enabled = false;
+    }
 }

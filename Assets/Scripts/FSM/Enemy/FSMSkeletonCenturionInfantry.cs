@@ -19,16 +19,6 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
         
 
     }
-    protected override void Start()
-    {
-        base.Start();
-
-        ObjectPoolManager.Instance.CreateObject("SkeletonInfantry");
-        ObjectPoolManager.Instance.CreateObject("InfantryBuff", 1);
-        ObjectPoolManager.Instance.CreateObject("BuffMark", 5);
-        // ObjectPoolManager.Instance.CreateObject("StrikeMark", 3);
-        ObjectPoolManager.Instance.CreateObject("SkeletonStriker", 3);
-    }
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -46,7 +36,7 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
         CurCooltime[num] = 0;
         while (CurCooltime[num]<MaxCooltime[num])
         {
-            CurCooltime[num] += Time.deltaTime;
+            CurCooltime[num] += Time.deltaTime * Time.timeScale;
             yield return null;
         }
         switch (num)
@@ -64,7 +54,7 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
         float cur = 0;
         while (cur <param)
         {
-            cur += Time.deltaTime;
+            cur += Time.deltaTime * Time.timeScale;
             yield return null;
         }
         skillCooldown = true;

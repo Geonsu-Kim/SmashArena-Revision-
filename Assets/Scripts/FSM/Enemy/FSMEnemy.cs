@@ -1,38 +1,33 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 [RequireComponent(typeof(Agent))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(ItemDrop))]
 public  class FSMEnemy : FSMBase
 {
-
     private Vector3 Dir;
-
     protected FSMPlayer player;
     protected Agent agent;
     protected new CapsuleCollider collider;
+    protected ItemDrop drop;
 
+
+    public int blueGem;
     public string enemyName;
     public Color NameTxtColor;
-    public GameObject[] DroppingItem;
     public Rigidbody rb;
+    [HideInInspector] public bool defenseBuff = false;
+    
+    
+    public GameObject[] DroppingItem;
+    public Collider[] Weapon;
     public FSMPlayer Player { get { return player; } }
-
-    public Collider[] colliders;
     protected virtual void Start()
     {
-        player = GameSceneManager.Instance.Player;
-        ObjectPoolManager.Instance.CreateObject("DamageText");
-        if (DroppingItem.Length != 0)
-        {
-            for (int i = 0; i < DroppingItem.Length; i++)
-            {
-                ObjectPoolManager.Instance.CreateObject(DroppingItem[i].name);
-            }
-        }
+        player = PlayerManager.Instance.Player;
     }
     protected override void Awake()
     {
@@ -41,20 +36,30 @@ public  class FSMEnemy : FSMBase
         agent._Awake();
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
+        drop = GetComponent<ItemDrop>();
+        for (int i = 0; i < Weapon.Length; i++)
+        {
+            Weapon[i].enabled = false;
+        }
     }
 
-    public override  void  Damaged(int amount,bool critical=false)
+    public override  void  Damaged(float amount,bool critical=false)
     {
         if (isDead()) return;
         if (critical) amount *= 2;
+        if (defenseBuff) amount *= 0.5f;
+        sb.Length = 0;
+        sb.Append(((int)amount).ToString());
         health.Damaged(amount);
-        ObjectPoolManager.Instance.CallText("DamageText", this.transform.position + Vector3.up * 1.0f, amount);
+        ObjectPoolManager.Instance.CallText("Text", this.transform.position + Vector3.up * 1.0f, sb.ToString()) ;
         UIManager.Instance.RenewEnemyUI(ref NameTxtColor,ref enemyName,health.Ratio());
         
         StartCoroutine(ColorByHit());
         if (health.IsDead())
         {
             SetStateTrigger(State.Dead);
+            drop.DropItem(Random.Range(0, drop.Max));
+            player.blueGem += blueGem;
             UIManager.Instance.EnemyInfo.SetActive(false);
         }
     }
@@ -69,13 +74,17 @@ public  class FSMEnemy : FSMBase
         transform.rotation = Quaternion.LookRotation(Dir);
     }
 
-    public IEnumerator Buff()
+    public IEnumerator Buff(float speed)
     {
-        animator.speed = 1.2f;
-        yield return YieldInstructionCache.WaitForSeconds(7.0f);
+        animator.speed = speed;
+        float t = 0f;
+        while (t < 7f)
+        {
+            t += Time.deltaTime * Time.timeScale;
+            yield return null;
+        }
         animator.speed = 1f;
     }
-
     protected override IEnumerator Stun()
     {
         agent.Stop();
@@ -112,13 +121,13 @@ public  class FSMEnemy : FSMBase
     protected override IEnumerator Dead()
     {
         yield return null;
+        for (int i = 0; i < Weapon.Length; i++)
+        {
+            Weapon[i].enabled = false;
+        }
         agent.Stop();
         collider.enabled = false;
         rb.isKinematic = true;
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            colliders[i].enabled = false;
-        }
         float t = 0;
         while (t < 2f)
         {

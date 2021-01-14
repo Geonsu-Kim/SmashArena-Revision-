@@ -6,11 +6,12 @@ using UnityEngine;
 public class FSMSkeletonKing : FSMEnemy
 {
 
-    [SerializeField]
-    private float[] MaxCooltime;
+    
+    [SerializeField] private float[] MaxCooltime;
     private float[] CurCooltime;
     private bool skillCooldown;
     private Queue<State> SkillQueue;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -36,7 +37,7 @@ public class FSMSkeletonKing : FSMEnemy
         CurCooltime[num] = 0;
         while (CurCooltime[num] < MaxCooltime[num])
         {
-            CurCooltime[num] += Time.deltaTime;
+            CurCooltime[num] += Time.deltaTime*Time.timeScale;
             yield return null;
         }
         switch (num)
@@ -55,7 +56,7 @@ public class FSMSkeletonKing : FSMEnemy
         float cur = 0;
         while (cur < param)
         {
-            cur += Time.deltaTime;
+            cur += Time.deltaTime * Time.timeScale;
             yield return null;
         }
         skillCooldown = true;

@@ -17,19 +17,6 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
         SkillQueue = new Queue<State>();
 
     }
-    protected override void Start()
-    {
-        base.Start();
-        ObjectPoolManager.Instance.CreateObject("NormalArrow");
-        ObjectPoolManager.Instance.CreateObject("ExplosiveArrow", 40);
-
-        
-        ObjectPoolManager.Instance.CreateObject("HomingArrow",1);
-
-        ObjectPoolManager.Instance.CreateObject("SkillMark");
-        ObjectPoolManager.Instance.CreateObject("ChargeShotAiming", 2);
-        ObjectPoolManager.Instance.CreateObject("ChargeShot",2);
-    }
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -48,7 +35,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
         CurCooltime[num] = 0;
         while (CurCooltime[num] < MaxCooltime[num])
         {
-            CurCooltime[num] += Time.deltaTime;
+            CurCooltime[num] += Time.deltaTime*Time.timeScale;
             yield return null;
         }
         switch (num)
@@ -66,7 +53,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
         float cur = 0;
         while (cur < param)
         {
-            cur += Time.deltaTime;
+            cur += Time.deltaTime * Time.timeScale;
             yield return null;
         }
         skillCooldown = true;
@@ -83,6 +70,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
             }
             else
             {
+
                 SetState(State.Attack);
             }
         } while (!isNewState);

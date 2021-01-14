@@ -5,11 +5,6 @@ using UnityEngine;
 public class FSMSkeletonRanged : FSMEnemy
 {
     public Transform FirePos;
-    protected override void Start()
-    {
-        base.Start();
-        ObjectPoolManager.Instance.CreateObject("NormalArrow");
-    }
     protected override IEnumerator Idle()
     {
         do
@@ -53,7 +48,7 @@ public class FSMSkeletonRanged : FSMEnemy
         {
             if (isDead()) break;
             yield return null;
-            if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
+            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
             {
                 RotateToPlayer();
                 if (!DistanceCheck(player.transform.position, characterState.AttackRange))

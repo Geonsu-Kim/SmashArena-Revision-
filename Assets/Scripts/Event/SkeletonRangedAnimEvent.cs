@@ -7,68 +7,64 @@ public class SkeletonRangedAnimEvent : EnemyAnimationEvent
     private int randomNum;
     // Start is called before the first frame update
     public Transform FirePos;
-    public Transform[] PArrowRainPts;
+    public Transform[] ArrowRainPts;
 
     private void Skeleton_RangedAttack()
     {
         ObjectPoolManager.Instance.CallObject("NormalArrow", FirePos, true, 2.0f);
     }
-    private void OnHomingArrowReady() //Homing Arrow
-    {
 
-        ObjectPoolManager.Instance.CallObject("SkillMark", this.transform.position + Vector3.up * 0.1f, Quaternion.identity, true, 1.5f);
-    }
-    private void OnHomingArrowFire()
+    private void OnMultiShot()
     {
-
-        ObjectPoolManager.Instance.CallObject("HomingArrow", FirePos, true, 7.0f);
-    }
-    private void OnChargeShotReady() //Charge Shot
-    {
-        /*
-        ObjectPoolManager.Instance.CallObject("ChargeShotMark", this.transform.position+ Vector3.up * 0.1f, Quaternion.identity, true, 1.5f);
-    */
+        for (int i = 0; i < 5; i++)
+        {
+            ObjectPoolManager.Instance.CallObject("NormalArrow", FirePos.transform.position, FirePos.transform.rotation * Quaternion.Euler(0, -24 + i * 12, 0), true, 7.0f);
+        }
     }
     private void OnChargeShotAiming()
     {
-        ObjectPoolManager.Instance.CallObject("ChargeShotAiming", FirePos, true, 3.0f);
+        ObjectPoolManager.Instance.CallObject("ChargingLightningShot", FirePos, true, 1.5f);
     }
     private void OnChargeShotFire() //Arrow Rain
     {
-
-        ObjectPoolManager.Instance.CallObject("ChargeShot", FirePos, true, 3.0f);
+        ObjectPoolManager.Instance.CallObject("LightningShot", FirePos.transform, true, 3.0f);
+        checkedColliders = OverLapRaycast.CheckBox((Vector3.forward * 5f + Vector3.up + Vector3.right*2f) * 0.5f, transform.position + transform.forward*2.5f + Vector3.up,transform.rotation);
+        for (int i = 0; i < checkedColliders.Length; i++)
+        {
+            FSMPlayer player = checkedColliders[i].gameObject.GetComponent<FSMPlayer>();
+            if (player != null)
+                player.Damaged(2000);
+        }
     }
     private void OnArrowRainReady()
     {
-        randomNum = Random.Range(0, PArrowRainPts.Length);
-        StartCoroutine(ArrowRain(false, PArrowRainPts[randomNum]));
+        randomNum = Random.Range(0, ArrowRainPts.Length);
     }
     private void OnArrowRainFire()
     {
-        StartCoroutine(ArrowRain(true, PArrowRainPts[randomNum]));
-
+        ObjectPoolManager.Instance.CallObject("ArrowRain", ArrowRainPts[randomNum].transform.position + Vector3.up * 4f, Quaternion.identity, true, 3.0f);
+        StartCoroutine(ArrowRainDamage());
     }
-    IEnumerator ArrowRain(bool attack, Transform points)
+    IEnumerator ArrowRainDamage()
     {
-        if (attack)
+        int count = 0;
+        while (count < 10)
         {
-            yield return YieldInstructionCache.WaitForSeconds(0.5f);
-            for (int j = 0; j < 2; j++)
+            float t = 0;
+            while (t < 0.33f)
             {
-                for (int i = 0; i < points.childCount; i++)
-                {
-                    yield return YieldInstructionCache.WaitForSeconds(0.02f);
-                    ObjectPoolManager.Instance.CallObject("ExplosiveArrow", points.GetChild(i).position + Vector3.up * 30f, Quaternion.Euler(90, 90, -90));
-                }
+                yield return null;
+                t += Time.deltaTime * Time.timeScale;
             }
-        }
-        else
-        {
-            for (int i = 0; i < points.childCount; i++)
+            checkedColliders = OverLapRaycast.CheckBox((Vector3.right * 10f + Vector3.up * 8f + Vector3.forward * 5f) * 0.5f, ArrowRainPts[randomNum].transform.position + Vector3.up * 4f,Quaternion.identity);
+            for (int i = 0; i < checkedColliders.Length; i++)
             {
-                yield return YieldInstructionCache.WaitForSeconds(0.02f);
-                ObjectPoolManager.Instance.CallObject("SkillMark", points.GetChild(i).position + Vector3.up * 0.1f, Quaternion.identity, true, 1.5f);
+                FSMPlayer player = checkedColliders[i].gameObject.GetComponent<FSMPlayer>();
+                if(player!=null)
+                player.Damaged(500);
             }
+            count++;
         }
+
     }
 }
