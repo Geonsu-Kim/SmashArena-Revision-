@@ -5,14 +5,6 @@ using UnityEngine;
 public class EnemySpawn : MonoBehaviour
 {
     public GameObject target;
-
-    private void Start()
-    {
-        if (target != null)
-        {
-            ObjectPoolManager.Instance.CreateObject(target.name, 5);
-        }
-    }
     public void Spawn()
     {
         if (target != null)
