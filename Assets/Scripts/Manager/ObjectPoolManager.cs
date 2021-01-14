@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-class ObjectPoolManager : SingletonBase<ObjectPoolManager>
+public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
 {
-    [SerializeField]
-    private GameObject[] Prefabs;
 
+
+    [SerializeField] private GameObject[] Prefabs;
     private List<GameObject> ObjPool;
     private void Awake()
     {
         ObjPool = new List<GameObject>();
     }
+   
     public void CreateObject(string name, int cnt = 5, Transform parent = null)
     {
         GameObject obj = null;
@@ -56,6 +57,7 @@ class ObjectPoolManager : SingletonBase<ObjectPoolManager>
         }
         return null;
     }
+    
     public void CallObject(string name, Transform transform, bool deact = false, float time = 0f)
     {
         GameObject target = GetObject(name);
@@ -84,18 +86,15 @@ class ObjectPoolManager : SingletonBase<ObjectPoolManager>
             }
         }
     }
-    public void CallText(string name, Vector3 position, float amount = 0)
+    public void CallText(string name, Vector3 position, string text)
     {
 
         GameObject target = GetObject(name);
         if (target != null)
         {
             target.transform.position = position+Vector3.up;
-            target.GetComponent<TextMeshPro>().text = amount.ToString();
+            target.GetComponent<TextMeshPro>().text = text;
             target.SetActive(true);
-
-            StartCoroutine(Deactivate(target,2f));
-
         }
     }
     public void DeletePool()
@@ -111,7 +110,12 @@ class ObjectPoolManager : SingletonBase<ObjectPoolManager>
     //이펙트만 띄우는 오브젝트에만 한함
     private IEnumerator Deactivate(GameObject obj, float time)
     {
-        yield return YieldInstructionCache.WaitForSeconds(time);
+        float t = 0f;
+        while (t < time)
+        {
+            t += Time.deltaTime * Time.timeScale;
+            yield return null;
+        }
         obj.SetActive(false);
     }
 }
