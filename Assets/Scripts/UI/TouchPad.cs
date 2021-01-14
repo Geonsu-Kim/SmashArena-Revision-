@@ -17,7 +17,7 @@ public class TouchPad : MonoBehaviour
     {
         touchPad = GetComponent<RectTransform>();
         startPos = touchPad.position;
-        player = GameSceneManager.Instance.Player;
+        player = PlayerManager.Instance.Player;
     }
 
     private void FixedUpdate()

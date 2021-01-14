@@ -13,7 +13,7 @@ public abstract class Item : MonoBehaviour
     protected abstract void GetItem(FSMPlayer player); 
     private void Start()
     {
-        player = GameSceneManager.Instance.Player;
+        player = PlayerManager.Instance.Player;
     }
     private void OnTriggerEnter(Collider other)
     {

@@ -14,14 +14,14 @@ public class TouchSkillButton : MonoBehaviour
     private Button button;
     private void Start()
     {
-        player = GameSceneManager.Instance.Player;
+        player = PlayerManager.Instance.Player;
         Icon = GetComponent<Image>();
         button = GetComponent<Button>();
         button.onClick.AddListener(SkillButtonDown);
     }
     private void Update()
     {
-        if (GameSceneManager.Instance.Player.mana.CheckLeftMana(GameSceneManager.Instance.Player.skills[skill_ID].Mana))
+        if (player.mana.CheckLeftMana(player.skills[skill_ID].Mana))
         {
             Icon.raycastTarget = true;
             Icon.color = Color.white;
@@ -39,7 +39,7 @@ public class TouchSkillButton : MonoBehaviour
             player.Action(skill_ID);
         }
         else {
-            if (GameSceneManager.Instance.OnBattle)
+            if (PlayerManager.Instance.OnBattle)
             {
                 if (!coolDown)
                 {
