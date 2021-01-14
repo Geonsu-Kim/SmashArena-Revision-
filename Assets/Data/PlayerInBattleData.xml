@@ -1,3 +1,3 @@
 <PlayerInBattleDB>
-  <Player CurHp="10000" BlueGem="1000" RedGem="0" Attack="1" Roll="1" Slash="1" Crash="1" Light="1" Critical="0" Defense="0" />
+  <Player CurHp="10000" BlueGem="5000" RedGem="0" Attack="1" Roll="1" Slash="1" Crash="1" Light="1" Critical="0" Defense="0" />
 </PlayerInBattleDB>

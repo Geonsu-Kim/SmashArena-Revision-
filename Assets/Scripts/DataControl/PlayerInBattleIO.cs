@@ -6,7 +6,7 @@ public sealed class PlayerInBattleIO : MonoBehaviour
 {
     public static void SaveData()
     {
-        FSMPlayer player = GameSceneManager.Instance.Player;
+        FSMPlayer player = PlayerManager.Instance.Player;
 
         XmlDocument Parent = new XmlDocument();
         XmlElement PlayerNode = Parent.CreateElement("PlayerInBattleDB");
@@ -21,7 +21,6 @@ public sealed class PlayerInBattleIO : MonoBehaviour
         PlayerStatNode.SetAttribute("Defense", player.def_Level.ToString());
         for (int i = 0; i < player.skills.Count; i++)
         {
-
             PlayerStatNode.SetAttribute(player.skills[i].SkillId.ToString(), player.skills[i].Level.ToString());
         }
 
@@ -32,7 +31,7 @@ public sealed class PlayerInBattleIO : MonoBehaviour
     {
         if (!System.IO.File.Exists(Application.dataPath + "/Data/PlayerInBattleData.xml")) return;
 
-        FSMPlayer player = GameSceneManager.Instance.Player;
+        FSMPlayer player = PlayerManager.Instance.Player;
         XmlDocument Parent = new XmlDocument();
         Parent.Load(Application.dataPath + "/Data/PlayerInBattleData.xml");
         XmlElement PlayerNode = Parent["PlayerInBattleDB"];
