@@ -37,7 +37,16 @@ public class Skill
         coefMax = s.coefMax;
         level = _level;
     }
-    public void LevelUp() { if(level<5)level++; }
+    public bool LevelUp() {
+        if (level < 5)
+        {
+            level++;
+            return true;
+        }
+        return false;
+    
+    
+    }
 
     public float CalcDamage(float basicDamage)
     {
