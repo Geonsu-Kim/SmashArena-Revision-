@@ -1,0 +1,11 @@
+<LevelDB>
+  <Level Level="1" Hp="10000" Mp="700" NeedExp="1000" />
+  <Level Level="2" Hp="12000" Mp="800" NeedExp="1500" />
+  <Level Level="3" Hp="14000" Mp="900" NeedExp="2000" />
+  <Level Level="4" Hp="16000" Mp="1000" NeedExp="2500" />
+  <Level Level="5" Hp="18000" Mp="1100" NeedExp="3000" />
+  <Level Level="6" Hp="20000" Mp="1200" NeedExp="3500" />
+  <Level Level="7" Hp="22000" Mp="1300" NeedExp="4000" />
+  <Level Level="8" Hp="24000" Mp="1400" NeedExp="4500" />
+  <Level Level="9" Hp="26000" Mp="1500" NeedExp="5000" />
+</LevelDB>
