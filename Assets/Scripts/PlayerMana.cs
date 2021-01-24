@@ -10,7 +10,7 @@ public class PlayerMana
     [SerializeField] private float maxMP;
 
     public float CurMP { set { curMP = value; } get { return curMP; } }
-    public float MaxMP { get { return maxMP; } }
+    public float MaxMP { set { maxMP = value; } get { return maxMP; } }
     public void Consume(float amount)
     {
         curMP -= amount;

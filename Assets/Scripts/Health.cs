@@ -11,7 +11,7 @@ public class Health
     [SerializeField]  private float maxHP;
 
     public float CurHP { set { curHP = value; } get { return curHP; } }
-    public float MaxHP { get { return maxHP; } }
+    public float MaxHP { set { maxHP = value; } get { return maxHP; } }
     public void Damaged(float amount)
     {
         curHP -= amount;
