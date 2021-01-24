@@ -9,6 +9,14 @@ public class StageTrigger : MonoBehaviour
     private float spawnInterval;
     [SerializeField]
     private float bossAppearTime;
+    [SerializeField]
+    private float maxBattleTime;
+
+    [SerializeField]
+    private bool isBossStage=false;
+    [SerializeField]
+    private string bgmName;
+
     private FSMPlayer player;
     private ParticleSystem ps;
     private BoxCollider box;
@@ -39,6 +47,10 @@ public class StageTrigger : MonoBehaviour
         {
             Doors_Next[i].Close();
         }
+        if (isBossStage)
+        {
+            EndEvent.AddListener(delegate { UIManager.Instance.ResultWindow.SetActive(true); });
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -66,6 +78,9 @@ public class StageTrigger : MonoBehaviour
         player.BtnNum = 0;
         ps.Stop();
         StartCoroutine(OnBattle());
+        SoundManager.Instance.PlayBGM(bgmName);
+
+        SoundManager.Instance.PlaySFX("DoorClose");
         if (BossEvent != null)
         {
             StartCoroutine(BossAppearence());
@@ -109,6 +124,18 @@ public class StageTrigger : MonoBehaviour
         player.RecoverHP((int)player.health.MaxHP);
         player.RecoverMP((int)player.mana.MaxMP);
         PlayerManager.Instance.OnBattle = false;
+        if (time < maxBattleTime)
+        {
+            float score = (10000 * (1 - (time / maxBattleTime)));
+            player.redGem+=(int)(10 * (1 - (time / maxBattleTime)));
+            PlayerManager.Instance.score += (int)score;
+            PlayerManager.Instance.Player.GetExp((int)(score/10));
+        }
+        GameSceneManager.Instance.playTime += time;
+
+        SoundManager.Instance.PlayBGM("BGM_Dungeon");
+
+        SoundManager.Instance.PlaySFX("DoorOpen");
         if (EndEvent != null)
         {
             EndEvent.Invoke();

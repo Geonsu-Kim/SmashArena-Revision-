@@ -9,6 +9,7 @@ using UnityEngine.AI;
 public  class FSMEnemy : FSMBase
 {
     private Vector3 Dir;
+    [SerializeField]private int exp;
     protected FSMPlayer player;
     protected Agent agent;
     protected new CapsuleCollider collider;
@@ -51,7 +52,7 @@ public  class FSMEnemy : FSMBase
         sb.Length = 0;
         sb.Append(((int)amount).ToString());
         health.Damaged(amount);
-        ObjectPoolManager.Instance.CallText("Text", this.transform.position + Vector3.up * 1.0f, sb.ToString()) ;
+        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f) ;
         UIManager.Instance.RenewEnemyUI(ref NameTxtColor,ref enemyName,health.Ratio());
         
         StartCoroutine(ColorByHit());
@@ -60,6 +61,7 @@ public  class FSMEnemy : FSMBase
             SetStateTrigger(State.Dead);
             drop.DropItem(Random.Range(0, drop.Max));
             player.blueGem += blueGem;
+            PlayerManager.Instance.Player.GetExp(exp);
             UIManager.Instance.EnemyInfo.SetActive(false);
         }
     }

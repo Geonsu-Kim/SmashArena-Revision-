@@ -8,6 +8,10 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
 
     [SerializeField] private GameObject[] Prefabs;
     private List<GameObject> ObjPool;
+    private Projector temp_p;
+    private const  string indicator = "Indicator";
+
+    private const string _text = "Text";
     private void Awake()
     {
         ObjPool = new List<GameObject>();
@@ -86,15 +90,33 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
             }
         }
     }
-    public void CallText(string name, Vector3 position, string text)
+    public void CallText(string text, Vector3 position)
     {
 
-        GameObject target = GetObject(name);
+        GameObject target = GetObject(_text);
         if (target != null)
         {
             target.transform.position = position+Vector3.up;
             target.GetComponent<TextMeshPro>().text = text;
             target.SetActive(true);
+        }
+    }
+    public void CallIndicator(Vector3 position, Quaternion quaternion, float size = 1f, float ratio = 1f,float far=5f,bool ortho = true )
+    {
+
+        GameObject target = GetObject(indicator);
+        if (target != null)
+        {
+            temp_p = target.GetComponent<Projector>();
+            target.transform.position = position + Vector3.up;
+            target.transform.rotation = quaternion;
+            temp_p.orthographicSize = size;
+            temp_p.aspectRatio = ratio;
+            temp_p.orthographic = ortho;
+            temp_p.farClipPlane = far;
+            target.SetActive(true);
+
+            StartCoroutine(Deactivate(target, 2f));
         }
     }
     public void DeletePool()

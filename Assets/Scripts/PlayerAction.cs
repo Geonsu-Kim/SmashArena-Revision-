@@ -1,10 +1,13 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Text;
 public class PlayerAction : MonoBehaviour
 {
 
+    private StringBuilder stringBuilder;
+    private const string playerName = "Player";
+    private string SFXname;
     private FSMPlayer player;
     public GameObject[] skillEffect;
 
@@ -14,6 +17,7 @@ public class PlayerAction : MonoBehaviour
     private void Start()
     {
         player = GetComponent<FSMPlayer>();
+        stringBuilder = new StringBuilder(64);
     }
     public void UseSkill(int num)
     {
@@ -62,7 +66,10 @@ public class PlayerAction : MonoBehaviour
                     Time.timeScale = 0;
                     DialogManager.Instance.Push(new DialogDataYesNo("Want to Move to Boss Room?", delegate (bool b) {
                         if (b) {
-                            player.portal.MoveToNextScene();
+                            for (int i = 0; i < 10; i++)
+                            {
+                                player.Warp(player.portal.WarpPos.position);
+                            }
                         }
                         Time.timeScale = 1;
                     }));
@@ -90,6 +97,12 @@ public class PlayerAction : MonoBehaviour
   
     public void Light()
     {
+
+        stringBuilder.Length = 0;
+        stringBuilder.Append(playerName);
+        stringBuilder.Append("Light");
+        SFXname = stringBuilder.ToString();
+        SoundManager.Instance.PlaySFX(SFXname);
         if (player.skills[4].Level < 4)
         {
             ObjectPoolManager.Instance.CallObject("Light"

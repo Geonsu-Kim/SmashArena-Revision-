@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Text;
 public class EnemyAnimationEvent : MonoBehaviour
 {
     protected FSMEnemy Enemy;
     protected Collider[] checkedColliders;
     protected  Collider[] Weapon;
     public  EnemySkillIcon skillIcon;
+
+    protected string SFXname;
+    protected StringBuilder stringBuilder;
     // Start is called before the first frame update
     protected void Start()
     {
+        stringBuilder = new StringBuilder(64);
         Enemy = GetComponent<FSMEnemy>();
         Weapon = Enemy.Weapon;
     }

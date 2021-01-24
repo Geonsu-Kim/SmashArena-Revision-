@@ -18,6 +18,14 @@
 *.booproj
 *.lighting
 *.props
+*.fbx
+*.mat
+*.wav
+*.mp3
+*.prefab
+*.txt
+*.PNG
+*.controller
 
 Temp/
  

@@ -21,7 +21,7 @@ public abstract class FSMBase : MonoBehaviour
     protected List<Material> mats;//skin,mesh
     protected Color originalColor = new Color(0, 0, 0);
 
-    public StringBuilder sb;
+    protected StringBuilder sb;
     public CharacterState characterState;
     public Health health;
     public bool Invincibility { get { return invincibility; } }

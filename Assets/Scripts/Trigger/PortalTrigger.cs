@@ -5,10 +5,7 @@ using UnityEngine.SceneManagement;
 public class PortalTrigger : MonoBehaviour
 {
     private FSMPlayer player;
-    public Vector3 WarpPos;
-    public string nextScene;
-    public string _text;
-    AsyncOperation op;
+    public Transform WarpPos;
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
@@ -26,12 +23,5 @@ public class PortalTrigger : MonoBehaviour
             player.BtnNum = 0;
             player.portal = null;
         }
-    }
-    public void MoveToNextScene()
-    {
-        player.StartPos = WarpPos;
-        Time.timeScale = 0;
-        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
-        op=SceneManager.LoadSceneAsync(nextScene,LoadSceneMode.Additive);
     }
 }

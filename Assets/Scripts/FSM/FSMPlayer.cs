@@ -1,13 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerAction))]
 public class FSMPlayer : FSMBase
 {
+
+    private string SFXname;
+
     private bool comboOnOff = false;
     private bool canRun = true;
     private int btnNum = 0;
+    private int exp;
+    private int level;
 
     private bool buffAttack = false;
     private bool buffDefense = false;
@@ -37,7 +43,9 @@ public class FSMPlayer : FSMBase
     public bool ComboOnOff { get { return comboOnOff; } set { comboOnOff = value; } }
     public int BtnNum { get { return btnNum; } set { btnNum = value; } }
 
+    public int Exp { get { return exp; } set { exp = value; } }
 
+    public int Level { get { return level; } set { level = value; } }
     public bool BuffAttack { get { return buffAttack; } }
     public bool BuffDefense { get { return buffDefense; } }
     public bool BuffCritical { get { return buffCritical; } }
@@ -46,6 +54,18 @@ public class FSMPlayer : FSMBase
 
     public bool LevelUpDef() { if (def_Level < 5) { def_Level++; return true; } else { return false; }  }
     public bool LevelUpCri() { if(cri_Level<5){cri_Level++; return true; } else { return false; }   }
+    public void GetExp(int amount)
+    {
+        exp += amount;
+        if (level > LevelData.statList.Count) return;
+        while (exp>= LevelData.statList[level - 1].needExp)
+        {
+            exp -= - LevelData.statList[level - 1].needExp;
+            level++;
+            InitStat();
+        }
+
+    }
     protected override void Awake()
     {
         base.Awake();
@@ -56,13 +76,32 @@ public class FSMPlayer : FSMBase
         {
             skillCommands[i] = new SkillCommand(i);
         }
-
-        skills = new List<Skill>();
     }
+    
     private void Start()
     {
-        PlayerInBattleIO.LoadData();
+        InitStat();
+        skills = new List<Skill>();
+        blueGem = GameSceneManager.Instance.BlueGemAmountInit;
+        cri_Level = 0;
+        def_Level = 0;
+        for (int i = 0; i < SkillData.skillList.Count; i++)
+        {
+            skills.Add(new Skill(SkillData.skillList[i], 1));
+        }
+        Warp(GameSceneManager.Instance.startPos.position);
+        InitStat();
     }
+    private void InitStat()
+    {
+        Debug.Log(LevelData.statList.Count);
+        if (level > LevelData.statList.Count) return;
+        health.MaxHP = LevelData.statList[level - 1].Hp;
+        mana.MaxMP = LevelData.statList[level - 1].Mp;
+        RecoverHP((int)health.MaxHP);
+        RecoverMP((int)mana.MaxMP);
+    }
+
     private void Update()
     {
         if (canRun && GetDir())
@@ -87,6 +126,12 @@ public class FSMPlayer : FSMBase
         {
             SetStateTrigger(State.Dead);
         }
+    }
+    public void Warp(Vector3 pos)
+    {
+        m_cc.enabled = false;
+        this.transform.position = pos;
+        m_cc.enabled = true;
     }
     public void RecoverHP(int amount)
     {
@@ -136,7 +181,12 @@ public class FSMPlayer : FSMBase
                 if (buffCoolDown) buffTime_CoolDown = 0; else StartCoroutine(CoolDownBuff());
                 break;
         }
-        ObjectPoolManager.Instance.CallText("Text", this.transform.position + Vector3.up * 1.0f, sb.ToString());
+        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f);
+
+        sb.Length = 0;
+        sb.Append("PlayerGetItem");
+        SFXname = sb.ToString();
+        SoundManager.Instance.PlaySFX(SFXname);
     }
     public void GetGoods(GoodsType goods,int amount)
     {
@@ -152,7 +202,11 @@ public class FSMPlayer : FSMBase
                 redGem += amount;
                 break;
         }
-        ObjectPoolManager.Instance.CallText("Text", this.transform.position + Vector3.up * 1.0f, sb.ToString());
+        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f);
+        sb.Length = 0;
+        sb.Append("PlayerGetItem");
+        SFXname = sb.ToString();
+        SoundManager.Instance.PlaySFX(SFXname);
     }
     public void GetPotion(PotionType potion,int level)
     {
@@ -175,7 +229,11 @@ public class FSMPlayer : FSMBase
                 break;
         }
         sb.Append(potion.ToString()).Append(" +").Append(amount.ToString());
-        ObjectPoolManager.Instance.CallText("Text", this.transform.position + Vector3.up * 1.0f, sb.ToString());
+        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f);
+        sb.Length = 0;
+        sb.Append("PlayerGetItem");
+        SFXname = sb.ToString();
+        SoundManager.Instance.PlaySFX(SFXname);
     }
 
     IEnumerator AttackBuff()
@@ -286,7 +344,9 @@ public class FSMPlayer : FSMBase
     }
     protected override IEnumerator Dead()
     {
-
+        
+        Time.timeScale = 0;
+        UIManager.Instance.ResultWindow.SetActive(true);
         do
         {
             yield return null;
