@@ -24,8 +24,7 @@ public class Dungeon : MonoBehaviour
     }
     public void GotoDungeon()
     {
-        SceneManager.LoadSceneAsync("scPlayer");
-        SceneManager.LoadSceneAsync(dungeonSceneName, LoadSceneMode.Additive);
+        LoadingSceneManager.LoadScene(dungeonSceneName);
     }
 
 }

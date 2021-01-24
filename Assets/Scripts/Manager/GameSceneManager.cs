@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameSceneManager : SingletonBase<GameSceneManager>
 {
+    public Transform startPos;
+    public int BlueGemAmountInit;
+    [HideInInspector] public string dungeonName="";
+    [HideInInspector] public float playTime=0;
     // Start is called before the first frame update
-    [SerializeField] private string sceneName;
-    void Start()
+    private void Awake()
     {
-        Time.timeScale = 1;
-        PlayerManager.Instance.Player.transform.position = PlayerManager.Instance.Player.StartPos;
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
-        Debug.Log(SceneManager.GetActiveScene().name);
+        dungeonName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadSceneAsync("scPlayer", LoadSceneMode.Additive);
     }
 }
