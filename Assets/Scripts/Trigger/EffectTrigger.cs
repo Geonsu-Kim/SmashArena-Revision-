@@ -5,7 +5,8 @@ using UnityEngine.Rendering;
 
 public class EffectTrigger : MonoBehaviour
 {
-    [SerializeField] protected int damageScalar = 0;
+    [SerializeField] protected float damageScalar = 0;
+    public float DaamageScalar { get { return damageScalar; } set { damageScalar = value; } }
     protected virtual void OnTriggerEnter(Collider other)
     {
         if ((this.gameObject.CompareTag("PlayerAttack")&&other.gameObject.CompareTag("Enemy"))

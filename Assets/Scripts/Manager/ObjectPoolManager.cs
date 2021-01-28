@@ -90,6 +90,36 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
             }
         }
     }
+    public void CallBulletTypeObj(string name, Transform transform, float damage,bool deact = false, float time = 0f)
+    {
+        GameObject target = GetObject(name);
+        if (target != null)
+        {
+            target.GetComponent<EffectTrigger>().DaamageScalar = damage;
+            target.transform.position = transform.position;
+            target.transform.rotation = transform.rotation;
+            target.SetActive(true);
+            if (deact)
+            {
+                StartCoroutine(Deactivate(target, time));
+            }
+        }
+    }
+    public void CallBulletTypeObj(string name, Vector3 position, Quaternion rotation, float damage, bool deact = false, float time = 0f)
+    {
+        GameObject target = GetObject(name);
+        if (target != null)
+        {
+            target.GetComponent<EffectTrigger>().DaamageScalar = damage;
+            target.transform.position = position;
+            target.transform.rotation = rotation;
+            target.SetActive(true);
+            if (deact)
+            {
+                StartCoroutine(Deactivate(target, time));
+            }
+        }
+    }
     public void CallText(string text, Vector3 position)
     {
 
