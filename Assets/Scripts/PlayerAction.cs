@@ -12,7 +12,6 @@ public class PlayerAction : MonoBehaviour
     public GameObject[] skillEffect;
 
     public Transform[] skillPos;
-    public GameObject Lightning;
     public GameObject Registance;
     private void Start()
     {
@@ -36,14 +35,7 @@ public class PlayerAction : MonoBehaviour
         if (PlayerManager.Instance.OnBattle)
         {
             player.ComboOnOff = true;
-            if (player.IsStanding())
-            {
-                player.SetState(State.Attack);
-            }
-            else if (player.IsRunning())
-            {
-                player.SetState(State.Dash);
-            }
+            player.SetState(State.Attack);
         }
         else
         {
@@ -125,15 +117,6 @@ public class PlayerAction : MonoBehaviour
         }
 
         player.ConsumeMana(player.skills[4].Mana);
-    }
-    private bool CheckAction()
-    {
-        if (player.IsDashing()) return false;
-        if (player.IsDead()) return false;
-        if (player.IsRolling()) return false;
-        if (player.IsUsingSkill1()) return false;
-        if (player.IsUsingSkill2()) return false;
-        return true;
     }
     // Update is called once per frame
 }

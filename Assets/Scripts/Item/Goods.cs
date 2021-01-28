@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum GoodsType
 {
-    BlueGem,RedGem
+    BlueGem
 }
 public class Goods : Item
 {
