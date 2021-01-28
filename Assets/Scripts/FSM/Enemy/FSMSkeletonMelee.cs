@@ -24,7 +24,7 @@ public class FSMSkeletonMelee : FSMEnemy
         {
             if (isDead()) break;
             yield return null;
-            if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+            if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
             {
                 SetState(State.Run);
             }
@@ -43,7 +43,7 @@ public class FSMSkeletonMelee : FSMEnemy
             yield return null;
             if (DistanceCheck(player.transform.position, 50f))
             {
-                if (DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Attack);
                 }
@@ -68,7 +68,7 @@ public class FSMSkeletonMelee : FSMEnemy
                 {
                     animator.SetInteger("atkType", Random.Range(0, 2));
                 }
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }

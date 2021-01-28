@@ -58,9 +58,9 @@ class PlayerAnimationEvent : MonoBehaviour
         }
         for (int i = 0; i < colls.Length; i++)
         {
-            damage = player.skills[0].CalcDamage(player.characterState.AttackDamage)*(1+player.CheckBuff(player.BuffAttack));
+            damage = player.skills[0].CalcDamage(player.BaseAtkDamage)*(1+player.CheckBuff(player.BuffAttack));
             FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
-            fSM.Damaged((int)damage, IsCritical()); 
+            fSM.Damaged(damage, IsCritical()); 
             ObjectPoolManager.Instance.CallObject("Hit",
            colls[i].gameObject.transform.position + Vector3.up * 1.0f,
            Quaternion.identity, true, 0.5f);
@@ -100,10 +100,9 @@ class PlayerAnimationEvent : MonoBehaviour
         }
         for (int i = 0; i < colls.Length; i++)
         {
-            damage = player.skills[2].CalcDamage(player.characterState.AttackDamage) * (1 + player.CheckBuff(player.BuffAttack));
+            damage = player.skills[2].CalcDamage(player.BaseAtkDamage) * (1 + player.CheckBuff(player.BuffAttack));
             FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
-            fSM.rb.AddForce((fSM.transform.position - this.transform.position).normalized * 20f, ForceMode.VelocityChange);
-            fSM.Damaged((int)damage, IsCritical());
+            fSM.Damaged(damage, IsCritical());
             ObjectPoolManager.Instance.CallObject("Hit",
           colls[i].gameObject.transform.position + Vector3.up * 1.0f,
           Quaternion.identity, true, 0.5f);
@@ -139,9 +138,9 @@ class PlayerAnimationEvent : MonoBehaviour
         for (int i = 0; i < colls.Length; i++)
         {
 
-            damage = player.skills[3].CalcDamage(player.characterState.AttackDamage) * (1 + player.CheckBuff(player.BuffAttack)); ;
+            damage = player.skills[3].CalcDamage(player.BaseAtkDamage) * (1 + player.CheckBuff(player.BuffAttack)); ;
             FSMEnemy fSM = colls[i].gameObject.GetComponent<FSMEnemy>();
-            fSM.Damaged((int)damage, IsCritical());
+            fSM.Damaged(damage, IsCritical());
             ObjectPoolManager.Instance.CallObject("Hit",
           colls[i].gameObject.transform.position + Vector3.up * 1.0f,
           Quaternion.identity, true, 0.5f);

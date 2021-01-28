@@ -67,7 +67,7 @@ public class FSMSkeletonKing : FSMEnemy
         {
             if (isDead()) break;
             yield return null;
-            if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+            if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
             {
                 SetState(State.Run);
             }
@@ -84,7 +84,7 @@ public class FSMSkeletonKing : FSMEnemy
             if (isDead()) break;
             agent.TraceTarget(Player.transform.position);
             yield return null;
-            if (DistanceCheck(player.transform.position, characterState.ChasingRange))
+            if (DistanceCheck(player.transform.position, info.EnemyChasingRange))
             {
                 if (SkillQueue.Count != 0 && skillCooldown)
                 {
@@ -93,7 +93,7 @@ public class FSMSkeletonKing : FSMEnemy
                     SetState(SkillQueue.Dequeue());
                     break;
                 }
-                if (DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Attack);
                 }
@@ -121,7 +121,7 @@ public class FSMSkeletonKing : FSMEnemy
                     SetState(SkillQueue.Dequeue());
                     break;
                 }
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -151,7 +151,7 @@ public class FSMSkeletonKing : FSMEnemy
                 && animator.GetCurrentAnimatorStateInfo(0).IsName("Skill1"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -175,7 +175,7 @@ public class FSMSkeletonKing : FSMEnemy
                   && animator.GetCurrentAnimatorStateInfo(0).IsName("Skill2"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -199,7 +199,7 @@ public class FSMSkeletonKing : FSMEnemy
                   && animator.GetCurrentAnimatorStateInfo(0).IsName("Skill3"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -223,7 +223,7 @@ public class FSMSkeletonKing : FSMEnemy
                   && animator.GetCurrentAnimatorStateInfo(0).IsName("Skill4"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }

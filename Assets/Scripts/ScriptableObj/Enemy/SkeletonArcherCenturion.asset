@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f059965ba173004a8620aa67518fd0a, type: 3}
+  m_Name: SkeletonArcherCenturion
+  m_EditorClassIdentifier: 
+  enemyName: ArcherCenturion
+  enemyMaxHp: 2000
+  enemyAtkDamage: 300
+  enemyAtkRange: 4
+  enemyChasingRange: 50
+  enemySpeed: 0
+  enemyExp: 100
+  blueGem: 100
+  enemyNameTxtColor: {r: 1, g: 0, b: 0, a: 1}

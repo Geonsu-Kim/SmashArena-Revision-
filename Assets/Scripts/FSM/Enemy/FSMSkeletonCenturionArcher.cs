@@ -64,7 +64,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
         {
             if (isDead()) break;
             yield return null;
-            if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+            if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
             {
                 SetState(State.Run);
             }
@@ -82,7 +82,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
             if (isDead()) break;
             agent.TraceTarget(Player.transform.position);
             yield return null;
-            if (DistanceCheck(player.transform.position,characterState.ChasingRange))
+            if (DistanceCheck(player.transform.position, info.EnemyChasingRange))
             {
                 if (SkillQueue.Count != 0&& skillCooldown)
                 {
@@ -91,7 +91,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
                     SetState(SkillQueue.Dequeue());
                     break;
                 }
-                if (DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Attack);
                 }
@@ -119,7 +119,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
                     SetState(SkillQueue.Dequeue());
                     break;
                 }
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -147,7 +147,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f && animator.GetCurrentAnimatorStateInfo(0).IsName("ArcherSkill1On"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -170,7 +170,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f && animator.GetCurrentAnimatorStateInfo(0).IsName("ArcherSkill2On"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -193,7 +193,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f && animator.GetCurrentAnimatorStateInfo(0).IsName("ArcherSkill3On"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }

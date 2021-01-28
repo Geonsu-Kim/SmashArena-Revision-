@@ -15,15 +15,11 @@ public  class FSMEnemy : FSMBase
     protected new CapsuleCollider collider;
     protected ItemDrop drop;
 
-
-    public int blueGem;
-    public string enemyName;
-    public Color NameTxtColor;
-    public Rigidbody rb;
+    public EnemyInfo info;
+    private Rigidbody rb;
     [HideInInspector] public bool defenseBuff = false;
     
     
-    public GameObject[] DroppingItem;
     public Collider[] Weapon;
     public FSMPlayer Player { get { return player; } }
     protected virtual void Start()
@@ -41,9 +37,15 @@ public  class FSMEnemy : FSMBase
         for (int i = 0; i < Weapon.Length; i++)
         {
             Weapon[i].enabled = false;
+            Weapon[i].GetComponent<EffectTrigger>().DaamageScalar = info.EnemyAtkDamage;
         }
+        InitStat();
     }
-
+    protected override void InitStat()
+    {
+        health.MaxHP = info.EnemyMaxHp;
+        health.Revive();
+    }
     public override  void  Damaged(float amount,bool critical=false)
     {
         if (isDead()) return;
@@ -53,15 +55,15 @@ public  class FSMEnemy : FSMBase
         sb.Append(((int)amount).ToString());
         health.Damaged(amount);
         ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f) ;
-        UIManager.Instance.RenewEnemyUI(ref NameTxtColor,ref enemyName,health.Ratio());
+        UIManager.Instance.RenewEnemyUI( info.EnemyNameTxtColor, info.EnemyName,health.Ratio());
         
         StartCoroutine(ColorByHit());
         if (health.IsDead())
         {
             SetStateTrigger(State.Dead);
             drop.DropItem(Random.Range(0, drop.Max));
-            player.blueGem += blueGem;
-            PlayerManager.Instance.Player.GetExp(exp);
+            player.blueGem += info.BlueGem;
+            PlayerManager.Instance.gainedExpInBattle+=exp;
             UIManager.Instance.EnemyInfo.SetActive(false);
         }
     }

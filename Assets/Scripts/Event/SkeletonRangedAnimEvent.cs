@@ -18,7 +18,7 @@ public class SkeletonRangedAnimEvent : EnemyAnimationEvent
         stringBuilder.Append("Attack1");
         SFXname = stringBuilder.ToString();
         SoundManager.Instance.PlaySFX(SFXname);
-        ObjectPoolManager.Instance.CallObject("NormalArrow", FirePos, true, 2.0f);
+        ObjectPoolManager.Instance.CallBulletTypeObj("NormalArrow", FirePos, Enemy.info.EnemyAtkDamage,true, 2.0f);
     }
     private void OnMultiShotReady()
     {
@@ -34,7 +34,7 @@ public class SkeletonRangedAnimEvent : EnemyAnimationEvent
         SoundManager.Instance.PlaySFX(SFXname);
         for (int i = 0; i < 5; i++)
         {
-            ObjectPoolManager.Instance.CallObject("NormalArrow", FirePos.transform.position, FirePos.transform.rotation * Quaternion.Euler(0, -24 + i * 12, 0), true, 7.0f);
+            ObjectPoolManager.Instance.CallBulletTypeObj("NormalArrow", FirePos.transform.position, FirePos.transform.rotation * Quaternion.Euler(0, -24 + i * 12, 0), Enemy.info.EnemyAtkDamage*7f, true, 7.0f);
         }
     }
     private void OnChargeShotReady()

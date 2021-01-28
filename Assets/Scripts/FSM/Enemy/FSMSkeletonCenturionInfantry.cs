@@ -65,7 +65,7 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
         {
             if (isDead())  break;
             yield return null;
-            if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+            if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
             {
                 SetState(State.Run);
             }
@@ -82,7 +82,7 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
             if (isDead())  break;
             agent.TraceTarget(Player.transform.position);
             yield return null;
-            if (DistanceCheck(player.transform.position, characterState.ChasingRange))
+            if (DistanceCheck(player.transform.position, info.EnemyChasingRange))
             {
                 if (SkillQueue.Count != 0&& skillCooldown)
                 {
@@ -91,7 +91,7 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
                     SetState(SkillQueue.Dequeue());
                      break;
                 }
-                if (DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Attack);
                 }
@@ -119,7 +119,7 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
                     SetState(SkillQueue.Dequeue());
                      break;
                 }
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -149,7 +149,7 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
                 && animator.GetCurrentAnimatorStateInfo(0).IsName("InfantrySkill1"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -173,7 +173,7 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
                   && animator.GetCurrentAnimatorStateInfo(0).IsName("InfantrySkill2"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
@@ -197,7 +197,7 @@ public class FSMSkeletonCenturionInfantry : FSMEnemy
                   && animator.GetCurrentAnimatorStateInfo(0).IsName("InfantrySkill3"))
             {
 
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }

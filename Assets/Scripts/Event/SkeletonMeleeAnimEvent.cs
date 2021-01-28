@@ -62,7 +62,7 @@ public class SkeletonMeleeAnimEvent : EnemyAnimationEvent
         {
             FSMEnemy melee = colls[i].GetComponent<FSMEnemy>();
 
-                ObjectPoolManager.Instance.CallObject("GettingBuff", melee.transform.position + Vector3.up * 0.2f, Quaternion.identity,true,2.0f);
+                ObjectPoolManager.Instance.CallObject("GettingBuff", melee.transform.position + Vector3.up * 0.2f, Quaternion.Euler(-90f, 0f, 0f), true,2.0f);
                 StartCoroutine(melee.Buff(1.2f));
             
         }
@@ -91,7 +91,7 @@ public class SkeletonMeleeAnimEvent : EnemyAnimationEvent
     { 
         for (int i = 0; i < StrikePts[randomPos].childCount; i++)
         {
-            ObjectPoolManager.Instance.CallObject("SkeletonStriker", StrikePts[randomPos].GetChild(i).transform, true, 2.0f);
+            ObjectPoolManager.Instance.CallBulletTypeObj("SkeletonStriker", StrikePts[randomPos].GetChild(i).transform, 1000f, true, 2.0f);
         }
     }
 }

@@ -11,7 +11,7 @@ public class FSMSkeletonRanged : FSMEnemy
         {
             if (isDead()) break;
             yield return null;
-            if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+            if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
             {
                 SetState(State.Run);
             }
@@ -28,9 +28,9 @@ public class FSMSkeletonRanged : FSMEnemy
             if (isDead()) break;
             agent.TraceTarget(Player.transform.position);
             yield return null;
-            if (DistanceCheck(player.transform.position, characterState.ChasingRange))
+            if (DistanceCheck(player.transform.position, info.EnemyChasingRange))
             {
-                if (DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Attack);
                 }
@@ -51,7 +51,7 @@ public class FSMSkeletonRanged : FSMEnemy
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
             {
                 RotateToPlayer();
-                if (!DistanceCheck(player.transform.position, characterState.AttackRange))
+                if (!DistanceCheck(player.transform.position, info.EnemyAtkRange))
                 {
                     SetState(State.Run);
                 }
