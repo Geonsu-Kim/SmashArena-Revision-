@@ -4,8 +4,8 @@ using UnityEngine;
 using TMPro;
 public class ResultControl : MonoBehaviour
 {
+    public TextMeshProUGUI resultTxt;
     public TextMeshProUGUI timeText;
-    public TextMeshProUGUI redGemText;
     public TextMeshProUGUI expText;
     public TextMeshProUGUI scoreText;
 
@@ -16,15 +16,23 @@ public class ResultControl : MonoBehaviour
         int m = (int)(GameSceneManager.Instance.playTime / 60);
         int s= (int)(GameSceneManager.Instance.playTime % 60);
         timeText.text = m.ToString() + " : " + s.ToString();
-        redGemText.text = PlayerManager.Instance.Player.redGem.ToString();
-        expText.text = PlayerManager.Instance.Player.Exp.ToString();
+        expText.text = PlayerManager.Instance.gainedExpInBattle.ToString();
         scoreText.text = PlayerManager.Instance.score.ToString();
+        PlayerManager.Instance.GivePlayerExp();
+    }
+    public void SetActiveTrue(string txt)
+    {
+        Time.timeScale = 0;
+
+        resultTxt.text = txt;
+        gameObject.SetActive(true);
 
     }
     public void GotoLobby()
     {
         PlayerDataIO.SaveData();
         LoadingSceneManager.LoadScene("scLobby");
+
     }
     public void Retry()
     {

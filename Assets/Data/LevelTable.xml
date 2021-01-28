@@ -1,11 +1,12 @@
 <LevelDB>
-  <Level Level="1" Hp="10000" Mp="700" NeedExp="1000" />
-  <Level Level="2" Hp="12000" Mp="800" NeedExp="1500" />
-  <Level Level="3" Hp="14000" Mp="900" NeedExp="2000" />
-  <Level Level="4" Hp="16000" Mp="1000" NeedExp="2500" />
-  <Level Level="5" Hp="18000" Mp="1100" NeedExp="3000" />
-  <Level Level="6" Hp="20000" Mp="1200" NeedExp="3500" />
-  <Level Level="7" Hp="22000" Mp="1300" NeedExp="4000" />
-  <Level Level="8" Hp="24000" Mp="1400" NeedExp="4500" />
-  <Level Level="9" Hp="26000" Mp="1500" NeedExp="5000" />
+  <Level Level="1" Hp="13000" Mp="700" NeedExp="1000" Atk="50"/>
+  <Level Level="2" Hp="14500" Mp="800" NeedExp="1500" Atk="53"/>
+  <Level Level="3" Hp="16000" Mp="900" NeedExp="2000" Atk="56"/>
+  <Level Level="4" Hp="17500" Mp="1000" NeedExp="2500" Atk="59"/>
+  <Level Level="5" Hp="19000" Mp="1100" NeedExp="3000" Atk="62"/>
+  <Level Level="6" Hp="21000" Mp="1200" NeedExp="3500" Atk="65"/>
+  <Level Level="7" Hp="22500" Mp="1300" NeedExp="4000" Atk="68"/>
+  <Level Level="8" Hp="24000" Mp="1400" NeedExp="4500" Atk="71"/>
+  <Level Level="9" Hp="26000" Mp="1500" NeedExp="5000" Atk="74"/>
+  <Level Level="10" Hp="30000" Mp="2000" NeedExp="99999" Atk="77"/>
 </LevelDB>

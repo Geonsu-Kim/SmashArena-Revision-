@@ -8,6 +8,7 @@ public struct Stat
     public int Hp;
     public int Mp;
     public int needExp;
+    public int Atk;
 }
 public sealed class LevelData : MonoBehaviour
 {
@@ -26,7 +27,8 @@ public sealed class LevelData : MonoBehaviour
             int _Hp= System.Convert.ToInt32(stats.GetAttribute("Hp"));
             int _Mp= System.Convert.ToInt32(stats.GetAttribute("Mp"));
             int _needExp = System.Convert.ToInt32(stats.GetAttribute("NeedExp"));
-            statList.Add(new Stat() { level = _level, Hp = _Hp, Mp = _Mp, needExp = _needExp });
+            int _Atk = System.Convert.ToInt32(stats.GetAttribute("Atk"));
+            statList.Add(new Stat() { level = _level, Hp = _Hp, Mp = _Mp, needExp = _needExp,Atk=_Atk });
         }
     }
 }

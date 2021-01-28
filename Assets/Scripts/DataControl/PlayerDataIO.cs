@@ -14,8 +14,7 @@ public sealed class PlayerDataIO : MonoBehaviour
 
         XmlElement PlayerStatNode = Parent.CreateElement("Player");
 
-        PlayerStatNode.SetAttribute("Level", player.health.CurHP.ToString());
-        PlayerStatNode.SetAttribute("RedGem", player.redGem.ToString());
+        PlayerStatNode.SetAttribute("Level", player.Level.ToString());
         PlayerStatNode.SetAttribute("Exp", player.Exp.ToString());
 
         PlayerNode.AppendChild(PlayerStatNode);
@@ -33,7 +32,6 @@ public sealed class PlayerDataIO : MonoBehaviour
         foreach(XmlElement stats in PlayerNode.ChildNodes)
         {
             player.Level = System.Convert.ToInt32(stats.GetAttribute("Level"));
-            player.redGem=System.Convert.ToInt32(stats.GetAttribute("RedGem"));
             player.Exp = System.Convert.ToInt32(stats.GetAttribute("Exp"));
 
         }
