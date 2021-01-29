@@ -22,12 +22,13 @@ public class TouchPad : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (player.isDead() || player.IsEnd()) return;
 #if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_WEBPLAYER
 
         HandleInput(Input.mousePosition);
 
 #endif
-        HandleTouchInput();
+            HandleTouchInput();
     }
     public void ButtonDowm()
     {
@@ -46,7 +47,7 @@ public class TouchPad : MonoBehaviour
             foreach (Touch touch in Input.touches)
             {
                 i++;
-                Vector3 touchPos = new Vector3(touch.position.x, touch.position.y);
+                Vector3 touchPos = Vector3.right * touch.position.x + Vector3.up * touch.position.y;
                 if (touch.phase == TouchPhase.Began)
                 {
                     if (touch.position.x <= (startPos.x + dragRadius))
@@ -69,6 +70,7 @@ public class TouchPad : MonoBehaviour
                     }
                 }
             }
+            
         }
     }
     void HandleInput(Vector3 input)
@@ -93,7 +95,7 @@ public class TouchPad : MonoBehaviour
 
         }
         diff = touchPad.position - startPos;
-        Vector2 normDiff = new Vector3(diff.x / dragRadius, diff.y / dragRadius);
+        Vector2 normDiff = Vector2.right * diff.x / dragRadius+ Vector2.up * diff.y / dragRadius;
         if (player != null)
         {
             player.SetDir(normDiff);
