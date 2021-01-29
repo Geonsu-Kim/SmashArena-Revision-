@@ -5,9 +5,9 @@ using UnityEngine;
 [Serializable]
 public class PlayerMana
 {
-    [SerializeField] private float curMP;
+    private float curMP;
 
-    [SerializeField] private float maxMP;
+     private float maxMP;
 
     public float CurMP { set { curMP = value; } get { return curMP; } }
     public float MaxMP { set { maxMP = value; } get { return maxMP; } }

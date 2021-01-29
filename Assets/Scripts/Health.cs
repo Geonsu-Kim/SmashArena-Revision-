@@ -6,9 +6,9 @@ using UnityEngine;
 public class Health
 {
 
-    [SerializeField]  private float curHP;
+    private float curHP=1f;
 
-    [SerializeField]  private float maxHP;
+    private float maxHP=1f;
 
     public float CurHP { set { curHP = value; } get { return curHP; } }
     public float MaxHP { set { maxHP = value; } get { return maxHP; } }
