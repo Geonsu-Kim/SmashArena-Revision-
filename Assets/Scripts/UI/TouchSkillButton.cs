@@ -21,16 +21,18 @@ public class TouchSkillButton : MonoBehaviour
     }
     private void Update()
     {
-        if (player.mana.CheckLeftMana(player.skills[skill_ID].Mana))
-        {
-            Icon.raycastTarget = true;
-            Icon.color = Color.white;
-        }
-        else
-        {
-            Icon.raycastTarget = false;
-            Icon.color = Color.white * 0.25f;
-        }
+        if (player.isDead() || player.IsEnd()) return;
+            if (player.mana.CheckLeftMana(player.skills[skill_ID].Mana))
+            {
+                Icon.raycastTarget = true;
+                Icon.color = Color.white;
+            }
+            else
+            {
+                Icon.raycastTarget = false;
+                Icon.color = Color.white * 0.25f;
+            }
+        
     }
     public  void SkillButtonDown()
     {
@@ -41,7 +43,7 @@ public class TouchSkillButton : MonoBehaviour
         else {
             if (PlayerManager.Instance.OnBattle)
             {
-                if (!coolDown)
+                if (!coolDown&&!player.IsUsingSkill())
                 {
                     coolDown = true;
                     StartCoroutine(SkillCoolDown());
