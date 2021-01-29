@@ -13,18 +13,18 @@ public class SoundManager : SingletonBase<SoundManager>
     private void OnEnable()
     {
         BGMsource = gameObject.AddComponent<AudioSource>();
-        BGMsource.volume = 1;
         BGMsource.playOnAwake = false;
+        BGMsource.volume = 1;
         BGMsource.loop = true;
+        PlayBGM(BGM[0].name);
         SFXSources = new AudioSource[maxSFXSource];
         for (int i = 0; i < SFXSources.Length; i++)
         {
             SFXSources[i] = gameObject.AddComponent<AudioSource>();
-            SFXSources[i].volume = 1;
             SFXSources[i].playOnAwake = false;
-            SFXSources[i].loop = true;
+            SFXSources[i].volume = 1;
+            SFXSources[i].loop = false;
         }
-        PlayBGM(BGM[0].name);
     }
     public void PlayBGM(string name,bool isLoop=true,float volume = 1.0f)
     {
