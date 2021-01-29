@@ -6,7 +6,6 @@ public class UIManager : SingletonBase<UIManager>
 {
     private int statNum;
     private int blueGemDemand;
-    private int redGemDemand;
     private FSMPlayer player;
 
     public GameObject EnemyInfo;
@@ -20,9 +19,7 @@ public class UIManager : SingletonBase<UIManager>
     public GameObject MainMenu;
     public GameObject ResultWindow;
     public Text BlueGem;
-    public Text RedGem;
     public Text BlueGemDemand;
-    public Text RedGemDemand;
     public RawImage[] Signals;
     private void Start()
     {
@@ -39,35 +36,28 @@ public class UIManager : SingletonBase<UIManager>
         {
             case 0:
                 blueGemDemand = 300 + player.skills[0].Level * 30 - 30;
-                redGemDemand = 0;
                 break;
             case 1:
                 blueGemDemand = 250 + player.def_Level * 25 - 25;
-                redGemDemand = 0;
                 break;
             case 2:
                 blueGemDemand = 300 + player.cri_Level * 60 - 60;
-                redGemDemand = 0;
                 break;
             case 3:
                 blueGemDemand = 400 + player.skills[2].Level * 20 - 20;
-                redGemDemand = 0;
                 break;
             case 4:
                 blueGemDemand = 500 + player.skills[3].Level * 25 - 25;
-                redGemDemand = 0;
                 break;
             case 5:
                 blueGemDemand = 200 + player.skills[4].Level * 30 - 30;
-                redGemDemand = 0;
                 break;
         }
         RenewText(ref BlueGemDemand, blueGemDemand.ToString());
-        RenewText(ref RedGemDemand, redGemDemand.ToString());
     }
     public void OnClickLevelUpButton()
     {
-        if (player.blueGem < blueGemDemand || player.redGem < redGemDemand) return;
+        if (player.blueGem < blueGemDemand ) return;
         bool flag = false;
         switch (statNum)
         {
@@ -81,14 +71,13 @@ public class UIManager : SingletonBase<UIManager>
         if (flag)
         {
             player.blueGem -= blueGemDemand;
-            player.redGem -= redGemDemand;
             RenewText(ref BlueGem, player.blueGem.ToString());
-            RenewText(ref RedGem, player.redGem.ToString());
             RenewDemandGem();
         }
     }
     public void OpenMenu()
     {
+        if (player.isDead() || player.IsEnd()) return;
         Time.timeScale = 0;
         if (PlayerManager.Instance.OnBattle)
         {
@@ -98,7 +87,6 @@ public class UIManager : SingletonBase<UIManager>
         {
             MainMenu.SetActive(true);
             RenewText(ref BlueGem, player.blueGem.ToString());
-            RenewText(ref RedGem, player.redGem.ToString());
         }
     }
     public void CloseMenu()
@@ -124,7 +112,7 @@ public class UIManager : SingletonBase<UIManager>
     {
         image.fillAmount = ratio;
     }
-    public void RenewEnemyUI(ref Color color,ref string name,float ratio)
+    public void RenewEnemyUI( Color color, string name,float ratio)
     {
         if (!EnemyInfo.activeSelf) EnemyInfo.SetActive(true);
         EnemyName.text = name;
