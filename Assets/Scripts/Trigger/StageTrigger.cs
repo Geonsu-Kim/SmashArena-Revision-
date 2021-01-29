@@ -47,10 +47,6 @@ public class StageTrigger : MonoBehaviour
         {
             Doors_Next[i].Close();
         }
-        if (isBossStage)
-        {
-            EndEvent.AddListener(delegate { UIManager.Instance.ResultWindow.SetActive(true); });
-        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -126,19 +122,29 @@ public class StageTrigger : MonoBehaviour
         PlayerManager.Instance.OnBattle = false;
         if (time < maxBattleTime)
         {
-            float score = (10000 * (1 - (time / maxBattleTime)));
-            player.redGem+=(int)(10 * (1 - (time / maxBattleTime)));
-            PlayerManager.Instance.score += (int)score;
-            PlayerManager.Instance.Player.GetExp((int)(score/10));
+            int score = (int)(10000 * (1 - (time / maxBattleTime)));
+            PlayerManager.Instance.score += score;
+            PlayerManager.Instance.gainedExpInBattle+=((score/10));
         }
         GameSceneManager.Instance.playTime += time;
 
         SoundManager.Instance.PlayBGM("BGM_Dungeon");
 
         SoundManager.Instance.PlaySFX("DoorOpen");
+
         if (EndEvent != null)
         {
             EndEvent.Invoke();
+        }
+        if (isBossStage)
+        {
+            player.SetStateTrigger(State.Victory);
+            time = 0f;
+            while (time < 2f)
+            {
+                yield return null;
+                time += Time.deltaTime * Time.timeScale;
+            }
         }
     }
     private IEnumerator BossAppearence()
