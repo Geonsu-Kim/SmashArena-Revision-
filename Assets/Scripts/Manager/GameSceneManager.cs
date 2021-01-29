@@ -11,6 +11,8 @@ public class GameSceneManager : SingletonBase<GameSceneManager>
     // Start is called before the first frame update
     private void Awake()
     {
+        Time.timeScale = 1;
+
         dungeonName = SceneManager.GetActiveScene().name;
         SceneManager.LoadSceneAsync("scPlayer", LoadSceneMode.Additive);
     }
