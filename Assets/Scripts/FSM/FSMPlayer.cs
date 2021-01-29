@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Text;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerAction))]
@@ -9,17 +10,16 @@ public class FSMPlayer : FSMBase
 
     private string SFXname;
 
-    private bool comboOnOff = false;
-    private bool canRun = true;
     private int btnNum = 0;
     private int exp;
     private int level;
-
+    private bool comboOnOff = false;
     private bool buffAttack = false;
     private bool buffDefense = false;
     private bool buffCritical = false;
     private bool buffCoolDown = false;
 
+    private float baseAtkDamage;
     private float buffTime_Attack = 0;
     private float buffTime_Defense = 0;
     private float buffTime_Critical = 0;
@@ -28,18 +28,18 @@ public class FSMPlayer : FSMBase
     private Command moveCommand;
     private Command[] skillCommands;
 
+    public UnityEvent OnPlayerDied;
+    public UnityEvent OnPlayerWin;
     public Vector3 Dir;
     public Vector3 StartPos;
     public List<Skill> skills;
     public PlayerMana mana;
     public CharacterController m_cc;
     [HideInInspector] public int blueGem;
-    [HideInInspector] public int redGem;
     [HideInInspector] public int cri_Level;
     [HideInInspector] public int def_Level;
     [HideInInspector] public StageTrigger stageTrigger;
     [HideInInspector] public PortalTrigger portal;
-    public bool CanRun { get { return canRun; } }
     public bool ComboOnOff { get { return comboOnOff; } set { comboOnOff = value; } }
     public int BtnNum { get { return btnNum; } set { btnNum = value; } }
 
@@ -50,6 +50,7 @@ public class FSMPlayer : FSMBase
     public bool BuffDefense { get { return buffDefense; } }
     public bool BuffCritical { get { return buffCritical; } }
     public bool BuffCoolDown { get { return buffCoolDown; } }
+    public float BaseAtkDamage { get { return baseAtkDamage; } }
     public float CheckBuff(bool buff) { if (buff) return 0.25f; else return 0f; }
 
     public bool LevelUpDef() { if (def_Level < 5) { def_Level++; return true; } else { return false; }  }
@@ -57,7 +58,7 @@ public class FSMPlayer : FSMBase
     public void GetExp(int amount)
     {
         exp += amount;
-        if (level > LevelData.statList.Count) return;
+        if (level >= LevelData.statList.Count) return;
         while (exp>= LevelData.statList[level - 1].needExp)
         {
             exp -= - LevelData.statList[level - 1].needExp;
@@ -90,21 +91,20 @@ public class FSMPlayer : FSMBase
             skills.Add(new Skill(SkillData.skillList[i], 1));
         }
         Warp(GameSceneManager.Instance.startPos.position);
-        InitStat();
     }
-    private void InitStat()
+    protected override void InitStat()
     {
-        Debug.Log(LevelData.statList.Count);
-        if (level > LevelData.statList.Count) return;
         health.MaxHP = LevelData.statList[level - 1].Hp;
         mana.MaxMP = LevelData.statList[level - 1].Mp;
+        baseAtkDamage = LevelData.statList[level - 1].Atk;
         RecoverHP((int)health.MaxHP);
         RecoverMP((int)mana.MaxMP);
     }
 
+
     private void Update()
     {
-        if (canRun && GetDir())
+        if(GetDir())
             moveCommand.Execute(this.gameObject);
     }
 
@@ -118,7 +118,7 @@ public class FSMPlayer : FSMBase
     public override void Damaged(float amount, bool critical = false)
     {
         if (isDead()) return;
-
+        if (invincibility) return;
         health.Damaged(amount * (1-(0.05f*def_Level)-CheckBuff(buffDefense)));
         RenewHpBar();
         StartCoroutine(ColorByHit());
@@ -196,10 +196,6 @@ public class FSMPlayer : FSMBase
             case GoodsType.BlueGem:
                 sb.Append("Get BlueGem!");
                 blueGem += amount;
-                break;
-            case GoodsType.RedGem:
-                sb.Append("Red BlueGem!");
-                redGem += amount;
                 break;
         }
         ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f);
@@ -301,6 +297,7 @@ public class FSMPlayer : FSMBase
     }
     public bool GetDir()//방향키 입력 여부
     {
+        if (IsEnd()) return false;
         if (Dir.x == 0 && Dir.z == 0)
         {
             return false;//방향키를 입력하지않음
@@ -310,7 +307,6 @@ public class FSMPlayer : FSMBase
     }
     protected override IEnumerator Attack()
     {
-        canRun = false;
         do
         {
             yield return null;
@@ -327,7 +323,6 @@ public class FSMPlayer : FSMBase
             }
 
         } while (!isNewState);
-        canRun = true;
     }
 
     protected override IEnumerator Run()
@@ -344,17 +339,33 @@ public class FSMPlayer : FSMBase
     }
     protected override IEnumerator Dead()
     {
-        
-        Time.timeScale = 0;
-        UIManager.Instance.ResultWindow.SetActive(true);
+        float t = 0;
+        while (t < 2f)
+        {
+            yield return null;
+            t += Time.deltaTime * Time.timeScale;
+        }
+        float amount = 0f;
         do
         {
             yield return null;
+            amount += Time.smoothDeltaTime * 0.5f;
+            for (int i = 0; i < mats.Count; i++)
+            {
+                mats[i].SetFloat("_SliceAmount", amount);
+            }
+        } while (amount < 1);
 
-        } while (!isNewState);
+        SoundManager.Instance.PlayBGM("BGM_Died");
+
+        if (OnPlayerDied != null)
+        {
+            OnPlayerDied.Invoke();
+        }
     }
     private IEnumerator Roll()
     {
+        invincibility = true;
         do
         {
             yield return null;
@@ -375,22 +386,9 @@ public class FSMPlayer : FSMBase
     }
 
 
-    private IEnumerator Dash()
-    {
-        canRun = false;
-        do
-        {
-            yield return null;
-            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.6f)
-            {
-                SetState(State.Idle);
-            }
-        } while (!isNewState);
-        canRun = true;
-    }
+
     private IEnumerator Buff()
     {
-        canRun = false;
         do
         {
             yield return null;
@@ -401,11 +399,9 @@ public class FSMPlayer : FSMBase
 
 
         } while (!isNewState);
-        canRun = true;
     }
     private IEnumerator Skill1()
     {
-        canRun = false;
         do
         {
             yield return null;
@@ -416,11 +412,9 @@ public class FSMPlayer : FSMBase
 
 
         } while (!isNewState);
-        canRun = true;
     }
     private IEnumerator Skill2()
     {
-        canRun = false;
         do
         {
             yield return null;
@@ -431,11 +425,9 @@ public class FSMPlayer : FSMBase
 
             }
         } while (!isNewState);
-        canRun = true;
     }
     private IEnumerator Skill3()
     {
-        canRun = false;
         do
         {
             yield return null;
@@ -446,11 +438,9 @@ public class FSMPlayer : FSMBase
 
             }
         } while (!isNewState);
-        canRun = true;
     }
     private IEnumerator SuperMove()
     {
-        canRun = false;
         do
         {
             yield return null;
@@ -459,18 +449,42 @@ public class FSMPlayer : FSMBase
                 SetState(State.Idle);
             }
         } while (!isNewState);
-        canRun = true;
     }
+    private IEnumerator Victory()
+    {
+        SoundManager.Instance.PlayBGM("BGM_Win");
+        do
+        {
+            yield return null;
+            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.8f)
+            {
+                if (OnPlayerWin != null)
+                {
+                    OnPlayerWin.Invoke();
+                    SetState(State.Idle);
+                }
+            }
 
+        } while (!isNewState);
+    }
     public bool IsStanding() { return m_state == State.Idle; }
     public bool IsAttacking() { return m_state == State.Attack; }
-    public bool IsDashing() { return m_state == State.Dash; }
     public bool IsRunning() { return m_state == State.Run; }
     public bool IsRolling() { return m_state == State.Roll; }
     public bool IsUsingSkill1() { return m_state == State.Skill1; }
     public bool IsUsingSkill2() { return m_state == State.Skill2; }
     public bool IsUsingSkill3() { return m_state == State.Skill3; }
-    public bool IsDead() { return m_state == State.Dead; }
+    public bool IsEnd() { return m_state == State.Victory; }
+
+    public bool CheckAction()
+    {
+        return IsAttacking() || IsUsingSkill();
+    }
+    public bool IsUsingSkill()
+    {
+        return m_state == State.Roll || m_state == State.Skill1 || m_state == State.Skill2 || m_state == State.Skill3;
+    }
+
 }
 
 
