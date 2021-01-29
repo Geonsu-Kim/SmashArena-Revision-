@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class PlayerManager : SingletonBase<PlayerManager>
 {
-    private bool onBattle=false;
+    private bool onBattle = false;
 
     private FSMPlayer player;
     private FollowCam cam;
     private GameObject canvas;
     public int score;
+    public int gainedExpInBattle;
     AsyncOperation op;
     public bool OnBattle { get { return onBattle; } set { onBattle = value; } }
     public FollowCam Cam { set { value = cam; } get { return cam; } }
@@ -18,9 +19,10 @@ public class PlayerManager : SingletonBase<PlayerManager>
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<FSMPlayer>();
-        cam= GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowCam>();
+        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowCam>();
         canvas = GameObject.Find("Canvas");
         PlayerDataIO.LoadData();
+
     }
     public void GotoLobby()
     {
@@ -31,5 +33,10 @@ public class PlayerManager : SingletonBase<PlayerManager>
     {
         PlayerDataIO.SaveData();
         LoadingSceneManager.LoadScene(GameSceneManager.Instance.dungeonName);
+    }
+    public void GivePlayerExp()
+    {
+        player.GetExp(gainedExpInBattle);
+
     }
 }
