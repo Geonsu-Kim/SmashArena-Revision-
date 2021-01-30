@@ -49,22 +49,29 @@ public class PlayerAction : MonoBehaviour
                         Time.timeScale = 0;
                         DialogManager.Instance.Push(new DialogDataYesNo("Start the Game?", delegate (bool b)
                         {
-                            if (b) { player.stageTrigger.StartBattle(); }
+                            if (b) 
+                            {
+                                player.stageTrigger.StartBattle();
+                                player.stageTrigger = null;
+                            }
                             Time.timeScale = 1;
                         }));
                     }
                     break;
                 case 2:
-                    Time.timeScale = 0;
-                    DialogManager.Instance.Push(new DialogDataYesNo("Want to Move to Boss Room?", delegate (bool b) {
-                        if (b) {
-                            for (int i = 0; i < 10; i++)
+                    if (player.portal != null)
+                    {
+                        Time.timeScale = 0;
+                        DialogManager.Instance.Push(new DialogDataYesNo("Want to Move to Boss Room?", delegate (bool b)
+                        {
+                            if (b)
                             {
                                 player.Warp(player.portal.WarpPos.position);
+                                player.portal = null;
                             }
-                        }
-                        Time.timeScale = 1;
-                    }));
+                            Time.timeScale = 1;
+                        }));
+                    }
                     break;
             }
             

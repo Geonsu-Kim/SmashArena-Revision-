@@ -70,7 +70,6 @@ public class StageTrigger : MonoBehaviour
     {
         PlayerManager.Instance.OnBattle = true;
         box.enabled = false;
-        player.stageTrigger = null;
         player.BtnNum = 0;
         ps.Stop();
         StartCoroutine(OnBattle());

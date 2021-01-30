@@ -21,6 +21,7 @@ public class TouchSkillButton : MonoBehaviour
     }
     private void Update()
     {
+
         if (player.isDead() || player.IsEnd()) return;
             if (player.mana.CheckLeftMana(player.skills[skill_ID].Mana))
             {
