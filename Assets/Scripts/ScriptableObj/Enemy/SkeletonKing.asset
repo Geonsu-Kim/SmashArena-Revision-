@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SkeletonKing
   m_EditorClassIdentifier: 
   enemyName: King
-  enemyMaxHp: 1000
+  enemyMaxHp: 5000
   enemyAtkDamage: 700
   enemyAtkRange: 2
   enemyChasingRange: 50

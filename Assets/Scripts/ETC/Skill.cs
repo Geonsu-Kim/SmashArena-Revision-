@@ -17,19 +17,19 @@ public class Skill
     public int Level { get { return level; } }
     public float Mana { get { return mana; } }
     public float CoolTime { get { return coolTime; } }
-    public Skill(string _name,int _skillID ,float _coolTime, float _mana=0f,float _coefMin=0f,float _coefMax=0f, int _level = 1)
+    public Skill(SkillInfo s, int _level = 1)
     {
-        name = _name;
-        skillID = _skillID;
-        coolTime = _coolTime;
-        mana = _mana;
-        coefMin = _coefMin;
-        coefMax = _coefMax;
+        name = string.Copy(s.SkillName);
+        skillID = s.SkillID;
+        coolTime = s.CoolTime;
+        mana = s.Mana;
+        coefMin = s.CoefMin;
+        coefMax = s.CoefMax;
         level = _level;
     }
     public Skill( Skill s,int _level=1)
     {
-        name = s.name;
+        name = string.Copy(s.name);
         skillID = s.skillID;
         coolTime =s.coolTime;
         mana = s.mana;

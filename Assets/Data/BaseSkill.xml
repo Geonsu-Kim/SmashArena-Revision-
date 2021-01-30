@@ -1,7 +1,0 @@
-<SkillDB>
-	<Attack name="Attack" skillID="0" coolTime="0" mana="0" coefMin="0.95" coefMax="1.05"/>
-	<Roll name="Roll" skillID="1" coolTime="3" mana="10" coefMin="0" coefMax="0"/>
-	<Slash name="Slash" skillID="2" coolTime="5" mana="150" coefMin="2.85" coefMax="3.05"/>
-	<Crash name="Crash" skillID="3" coolTime="7" mana="400" coefMin="3.5" coefMax="4.5"/>
-	<Light name="Light" skillID="4" coolTime="5" mana="250" coefMin="0" coefMax="0"/>
-</SkillDB>

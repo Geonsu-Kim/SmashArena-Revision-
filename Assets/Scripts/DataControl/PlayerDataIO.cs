@@ -7,33 +7,23 @@ public sealed class PlayerDataIO : MonoBehaviour
     public static void SaveData()
     {
         FSMPlayer player = PlayerManager.Instance.Player;
-
-        XmlDocument Parent = new XmlDocument();
-        XmlElement PlayerNode = Parent.CreateElement("PlayerDB");
-        Parent.AppendChild(PlayerNode);
-
-        XmlElement PlayerStatNode = Parent.CreateElement("Player");
-
-        PlayerStatNode.SetAttribute("Level", player.Level.ToString());
-        PlayerStatNode.SetAttribute("Exp", player.Exp.ToString());
-
-        PlayerNode.AppendChild(PlayerStatNode);
-        Parent.Save(Application.dataPath + "/Data/PlayerData.xml");
+        PlayerPrefs.SetInt("Level", player.Level);
+        PlayerPrefs.SetInt("Exp", player.Exp);
+       
     }
     public static void LoadData()
     {
-        if (!System.IO.File.Exists(Application.dataPath + "/Data/PlayerData.xml")) return;
-
         FSMPlayer player = PlayerManager.Instance.Player;
-        XmlDocument Parent = new XmlDocument();
-        Parent.Load(Application.dataPath + "/Data/PlayerData.xml");
-        XmlElement PlayerNode = Parent["PlayerDB"];
-        XmlNodeList playerStats = PlayerNode.ChildNodes;
-        foreach(XmlElement stats in PlayerNode.ChildNodes)
+        if (PlayerPrefs.HasKey("Level"))
         {
-            player.Level = System.Convert.ToInt32(stats.GetAttribute("Level"));
-            player.Exp = System.Convert.ToInt32(stats.GetAttribute("Exp"));
-
+            player.Level = PlayerPrefs.GetInt("Level");
+            player.Exp = PlayerPrefs.GetInt("Exp");
         }
+        else
+        {
+            player.Level = 1;
+            player.Exp = 0;
+        }
+
     }
 }
