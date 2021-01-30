@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class UIManager : SingletonBase<UIManager>
 {
     private int statNum;
-    private int blueGemDemand;
+    private int needBlueGem;
     private FSMPlayer player;
 
     public GameObject EnemyInfo;
@@ -19,7 +20,10 @@ public class UIManager : SingletonBase<UIManager>
     public GameObject MainMenu;
     public GameObject ResultWindow;
     public Text BlueGem;
-    public Text BlueGemDemand;
+    public Text NeedBlueGem;
+    public Text HpText;
+    public Text MpText;
+    public Text StatDescription;
     public RawImage[] Signals;
     private void Start()
     {
@@ -29,35 +33,54 @@ public class UIManager : SingletonBase<UIManager>
     {
         statNum = num;
         RenewDemandGem();
+        RenewStatDescription();
     }
     public void RenewDemandGem()
     {
         switch (statNum)
         {
             case 0:
-                blueGemDemand = 300 + player.skills[0].Level * 30 - 30;
+                needBlueGem = 300 + player.skills[0].Level * 30 - 30;
                 break;
             case 1:
-                blueGemDemand = 250 + player.def_Level * 25 - 25;
+                needBlueGem = 250 + player.def_Level * 25 - 25;
                 break;
             case 2:
-                blueGemDemand = 300 + player.cri_Level * 60 - 60;
+                needBlueGem = 300 + player.cri_Level * 60 - 60;
                 break;
             case 3:
-                blueGemDemand = 400 + player.skills[2].Level * 20 - 20;
+                needBlueGem = 400 + player.skills[2].Level * 20 - 20;
                 break;
             case 4:
-                blueGemDemand = 500 + player.skills[3].Level * 25 - 25;
-                break;
-            case 5:
-                blueGemDemand = 200 + player.skills[4].Level * 30 - 30;
+                needBlueGem = 500 + player.skills[3].Level * 25 - 25;
                 break;
         }
-        RenewText(ref BlueGemDemand, blueGemDemand.ToString());
+        RenewText(ref NeedBlueGem, needBlueGem.ToString());
+    }
+    public void RenewStatDescription()
+    {
+        switch (statNum)
+        {
+            case 0:
+                StatDescription.text = "기본 공격의 위력이 증가합니다.";
+                break;
+            case 1:
+                StatDescription.text = "플레이어가 받는 피해량이 감소합니다.";
+                break;
+            case 2:
+                StatDescription.text = "플레이어의 치명타 성공 확률이 증가합니다.";
+                break;
+            case 3:
+                StatDescription.text = "스킬 'Slash'의 위력이 증가합니다.";
+                break;
+            case 4:
+                StatDescription.text = "스킬 'Crash'의 위력이 증가합니다.";
+                break;
+        }
     }
     public void OnClickLevelUpButton()
     {
-        if (player.blueGem < blueGemDemand ) return;
+        if (player.blueGem < needBlueGem) return;
         bool flag = false;
         switch (statNum)
         {
@@ -70,7 +93,7 @@ public class UIManager : SingletonBase<UIManager>
         }
         if (flag)
         {
-            player.blueGem -= blueGemDemand;
+            player.blueGem -= needBlueGem;
             RenewText(ref BlueGem, player.blueGem.ToString());
             RenewDemandGem();
         }
@@ -117,5 +140,9 @@ public class UIManager : SingletonBase<UIManager>
         if (!EnemyInfo.activeSelf) EnemyInfo.SetActive(true);
         EnemyName.text = name;
         EnemyHpBar.fillAmount = ratio;
+    }
+    public void GotoLobby()
+    {
+        LoadingSceneManager.LoadScene("scLobby");
     }
 }

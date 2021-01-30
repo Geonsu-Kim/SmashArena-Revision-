@@ -12,6 +12,7 @@ public class FSMPlayer : FSMBase
 
     private int btnNum = 0;
     private int exp;
+    private int needExp;
     private int level;
     private bool comboOnOff = false;
     private bool buffAttack = false;
@@ -59,9 +60,9 @@ public class FSMPlayer : FSMBase
     {
         exp += amount;
         if (level >= LevelData.statList.Count) return;
-        while (exp>= LevelData.statList[level - 1].needExp)
+        while (exp>= needExp)
         {
-            exp -= - LevelData.statList[level - 1].needExp;
+            exp -= -needExp;
             level++;
             InitStat();
         }
@@ -97,6 +98,7 @@ public class FSMPlayer : FSMBase
         health.MaxHP = LevelData.statList[level - 1].Hp;
         mana.MaxMP = LevelData.statList[level - 1].Mp;
         baseAtkDamage = LevelData.statList[level - 1].Atk;
+        needExp = LevelData.statList[level - 1].NeedExp;
         RecoverHP((int)health.MaxHP);
         RecoverMP((int)mana.MaxMP);
     }
@@ -119,7 +121,12 @@ public class FSMPlayer : FSMBase
     {
         if (isDead()) return;
         if (invincibility) return;
-        health.Damaged(amount * (1-(0.05f*def_Level)-CheckBuff(buffDefense)));
+        float realAmount = amount * (1 - (0.05f * def_Level) - CheckBuff(buffDefense));
+        sb.Length = 0;
+        sb.Append(((int)realAmount).ToString());
+        health.Damaged(realAmount);
+
+        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f, Color.red);
         RenewHpBar();
         StartCoroutine(ColorByHit());
         if (health.IsDead())
@@ -153,10 +160,20 @@ public class FSMPlayer : FSMBase
     }
     public void RenewHpBar()
     {
+        sb.Length = 0;
+        sb.Append(((int)health.CurHP).ToString());
+        sb.Append("/");
+        sb.Append(health.MaxHP.ToString());
+        UIManager.Instance.RenewText(ref UIManager.Instance.HpText, sb.ToString());
         UIManager.Instance.RenewPlayerUI(ref UIManager.Instance.PlayerHpBar, health.Ratio());
     }
     public void RenewMpBar()
     {
+        sb.Length = 0;
+        sb.Append(mana.CurMP.ToString());
+        sb.Append("/");
+        sb.Append(mana.MaxMP.ToString());
+        UIManager.Instance.RenewText(ref UIManager.Instance.MpText, sb.ToString());
         UIManager.Instance.RenewPlayerUI(ref UIManager.Instance.PlayerMpBar, mana.Ratio());
     }
     public void GetBuff(BuffType buff)
@@ -181,7 +198,7 @@ public class FSMPlayer : FSMBase
                 if (buffCoolDown) buffTime_CoolDown = 0; else StartCoroutine(CoolDownBuff());
                 break;
         }
-        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f);
+        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f,Color.white);
 
         sb.Length = 0;
         sb.Append("PlayerGetItem");
@@ -198,7 +215,7 @@ public class FSMPlayer : FSMBase
                 blueGem += amount;
                 break;
         }
-        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f);
+        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f, Color.white);
         sb.Length = 0;
         sb.Append("PlayerGetItem");
         SFXname = sb.ToString();
@@ -207,7 +224,6 @@ public class FSMPlayer : FSMBase
     public void GetPotion(PotionType potion,int level)
     {
         int amount = 0;
-        sb.Length = 0;
         switch (level)
         {
             case 1: amount = 1500; break;
@@ -224,8 +240,9 @@ public class FSMPlayer : FSMBase
                 RecoverMP(amount);
                 break;
         }
+        sb.Length = 0;
         sb.Append(potion.ToString()).Append(" +").Append(amount.ToString());
-        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f);
+        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f, Color.white);
         sb.Length = 0;
         sb.Append("PlayerGetItem");
         SFXname = sb.ToString();

@@ -5,11 +5,13 @@ using TMPro;
 public class DamageText : MonoBehaviour
 {
     TextMeshPro text;
-    Color originColor;
     Color changedColor;
     private float time = 0f;
     private float moveSpeed;
     private float alphaSpeed;
+
+
+    public Color originColor;
     // Start is called before the first frame update
     private void Awake()
     {

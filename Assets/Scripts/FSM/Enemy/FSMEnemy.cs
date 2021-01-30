@@ -54,7 +54,7 @@ public  class FSMEnemy : FSMBase
         sb.Length = 0;
         sb.Append(((int)amount).ToString());
         health.Damaged(amount);
-        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f) ;
+        ObjectPoolManager.Instance.CallText(sb.ToString(), this.transform.position + Vector3.up * 1.0f,Color.white) ;
         UIManager.Instance.RenewEnemyUI( info.EnemyNameTxtColor, info.EnemyName,health.Ratio());
         
         StartCoroutine(ColorByHit());

@@ -120,14 +120,17 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
             }
         }
     }
-    public void CallText(string text, Vector3 position)
+    public void CallText(string text, Vector3 position,Color color)
     {
 
         GameObject target = GetObject(_text);
         if (target != null)
         {
+            DamageText dt = target.GetComponent<DamageText>();
+            TextMeshPro t = target.GetComponent<TextMeshPro>();
+            dt.originColor = color;
+            t.text = text;
             target.transform.position = position+Vector3.up;
-            target.GetComponent<TextMeshPro>().text = text;
             target.SetActive(true);
         }
     }
