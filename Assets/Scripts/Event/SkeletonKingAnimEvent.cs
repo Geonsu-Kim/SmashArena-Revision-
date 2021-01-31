@@ -88,13 +88,14 @@ public class SkeletonKingAnimEvent : EnemyAnimationEvent
     }
     IEnumerator ExcuteExplosion()
     {
+
+        stringBuilder.Length = 0;
+        stringBuilder.Append(enemyName);
+        stringBuilder.Append("Explosion");
+        SFXname = stringBuilder.ToString();
         for (int k = 0; k < ExplosionPos.Length; k++)
         {
 
-            stringBuilder.Length = 0;
-            stringBuilder.Append(enemyName);
-            stringBuilder.Append("Explosion");
-            SFXname = stringBuilder.ToString();
             SoundManager.Instance.PlaySFX(SFXname);
             ObjectPoolManager.Instance.CallObject("Explosion", ExplosionPos[k] + Vector3.up * 0.1f, Quaternion.Euler(-90f, 0f, 0f), true, 2f);
             checkedColliders = OverLapRaycast.CheckSphere(1.5f, ExplosionPos[k]);

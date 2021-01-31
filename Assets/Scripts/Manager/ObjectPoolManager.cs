@@ -60,7 +60,7 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
         if (ObjPool[name].Count == 0) return null;
         for (int i = 0; i < ObjPool[name].Count; i++)
         {
-            if (i == ObjPool.Count - 1)
+            if (i == ObjPool[name].Count - 1)
             {
                 CreateObject(name, 1);
                 return ObjPool[name][i];
