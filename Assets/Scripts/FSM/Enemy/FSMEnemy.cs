@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 [RequireComponent(typeof(Agent))]
-[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(BoxCollider))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(ItemDrop))]
 public  class FSMEnemy : FSMBase
@@ -12,7 +12,7 @@ public  class FSMEnemy : FSMBase
     [SerializeField]private int exp;
     protected FSMPlayer player;
     protected Agent agent;
-    protected new CapsuleCollider collider;
+    protected BoxCollider coll;
     protected ItemDrop drop;
 
     public EnemyInfo info;
@@ -32,7 +32,7 @@ public  class FSMEnemy : FSMBase
         agent = GetComponent<Agent>();
         agent._Awake();
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<CapsuleCollider>();
+        coll = GetComponent<BoxCollider>();
         drop = GetComponent<ItemDrop>();
         for (int i = 0; i < Weapon.Length; i++)
         {
@@ -130,14 +130,10 @@ public  class FSMEnemy : FSMBase
             Weapon[i].enabled = false;
         }
         agent.Stop();
-        collider.enabled = false;
+        coll.enabled = false;
         rb.isKinematic = true;
-        float t = 0;
-        while (t < 2f)
-        {
-            yield return null;
-            t += Time.deltaTime * Time.timeScale;
-        }
+
+        yield return YieldInstructionCache.WaitForSeconds(2f);
         float amount = 0;
         do
         {
@@ -149,7 +145,7 @@ public  class FSMEnemy : FSMBase
             }
         } while (amount<1);
         this.gameObject.SetActive(false);
-        collider.enabled = true;
+        coll.enabled = true;
 
         rb.isKinematic = false;
         agent.Turn(true);

@@ -356,12 +356,7 @@ public class FSMPlayer : FSMBase
     }
     protected override IEnumerator Dead()
     {
-        float t = 0;
-        while (t < 2f)
-        {
-            yield return null;
-            t += Time.deltaTime * Time.timeScale;
-        }
+        yield return YieldInstructionCache.WaitForSeconds(2f);
         float amount = 0f;
         do
         {

@@ -7,13 +7,11 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
 {
     [SerializeField]
     private float[] MaxCooltime;
-    private float[] CurCooltime;
     private bool skillCooldown;
     private Queue<State> SkillQueue;
     protected override void Awake()
     {
         base.Awake();
-        CurCooltime = new float[3];
         SkillQueue = new Queue<State>();
 
     }
@@ -32,12 +30,8 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
     //스킬 자체의 쿨타임(쿨타임이 차면 스킬 준비 큐에 삽입된다)
     private IEnumerator SkillCoolDown(int num)
     {
-        CurCooltime[num] = 0;
-        while (CurCooltime[num] < MaxCooltime[num])
-        {
-            CurCooltime[num] += Time.deltaTime*Time.timeScale;
-            yield return null;
-        }
+
+        yield return YieldInstructionCache.WaitForSeconds(MaxCooltime[num]);
         switch (num)
         {
             case 0: SkillQueue.Enqueue(State.Skill1); break;
@@ -50,12 +44,8 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
     //큐에 사용할 스킬이 준비되어있어도 이 쿨타임이 다 차야 스킬을 사용할 수 있다.
     private IEnumerator QueueCoolDown(float param)
     {
-        float cur = 0;
-        while (cur < param)
-        {
-            cur += Time.deltaTime * Time.timeScale;
-            yield return null;
-        }
+
+        yield return YieldInstructionCache.WaitForSeconds(param);
         skillCooldown = true;
     }
     protected override IEnumerator Idle()

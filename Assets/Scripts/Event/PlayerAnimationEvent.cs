@@ -107,10 +107,6 @@ class PlayerAnimationEvent : MonoBehaviour
           colls[i].gameObject.transform.position + Vector3.up * 1.0f,
           Quaternion.identity, true, 0.5f);
         }
-        if (player.skills[2].Level >= 4)
-        {
-            
-        }
     }
     public void OnSkill2Ready()
     {
@@ -144,10 +140,6 @@ class PlayerAnimationEvent : MonoBehaviour
             ObjectPoolManager.Instance.CallObject("Hit",
           colls[i].gameObject.transform.position + Vector3.up * 1.0f,
           Quaternion.identity, true, 0.5f);
-        }
-        if (player.skills[3].Level >= 4)
-        {
-           
         }
     }
     public void OnWalk()

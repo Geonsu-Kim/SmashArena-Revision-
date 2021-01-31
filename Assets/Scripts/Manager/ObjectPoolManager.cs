@@ -7,19 +7,26 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
 
 
     [SerializeField] private GameObject[] Prefabs;
-    private List<GameObject> ObjPool;
-    private Projector temp_p;
-    private const  string indicator = "Indicator";
+    private Dictionary<string, List<GameObject>> ObjPool;
 
+    private Projector temp_p;
+    private GameObject obj;
+    private GameObject target;
+    private TextMeshPro t;
+    private DamageText dt;
+
+    private const string indicator = "Indicator";
     private const string _text = "Text";
+
     private void Awake()
     {
-        ObjPool = new List<GameObject>();
+        ObjPool = new Dictionary<string, List<GameObject>>();
+
     }
-   
+
     public void CreateObject(string name, int cnt = 5, Transform parent = null)
     {
-        GameObject obj = null;
+        obj = null;
         for (int i = 0; i < Prefabs.Length; i++)
         {
             if (Prefabs[i].name.Equals(name))
@@ -37,34 +44,35 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
     }
     public void CreateObject(GameObject newObj, string name, int cnt, Transform parent = null)
     {
+        if (!ObjPool.ContainsKey(name))
+            ObjPool.Add(name, new List<GameObject>());
         for (int i = 0; i < cnt; i++)
         {
             GameObject obj = GameObject.Instantiate(newObj);
             obj.transform.name = name;
             obj.SetActive(false);
             obj.transform.SetParent(parent);
-            ObjPool.Add(obj);
+            ObjPool[name].Add(obj);
         }
     }
     public GameObject GetObject(string name)
     {
-        if (ObjPool.Count == 0) return null;
-        for (int i = 0; i < ObjPool.Count; i++)
+        if (ObjPool[name].Count == 0) return null;
+        for (int i = 0; i < ObjPool[name].Count; i++)
         {
             if (i == ObjPool.Count - 1)
             {
                 CreateObject(name, 1);
-                return ObjPool[i + 1];
+                return ObjPool[name][i];
             }
-            if (!ObjPool[i].name.Equals(name)) continue;
-            if (!ObjPool[i].activeSelf)return ObjPool[i];
+            if (!ObjPool[name][i].activeSelf) return ObjPool[name][i];
         }
         return null;
     }
-    
+
     public void CallObject(string name, Transform transform, bool deact = false, float time = 0f)
     {
-        GameObject target = GetObject(name);
+        target = GetObject(name);
         if (target != null)
         {
             target.transform.position = transform.position;
@@ -78,7 +86,7 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
     }
     public void CallObject(string name, Vector3 position, Quaternion rotation, bool deact = false, float time = 0f)
     {
-        GameObject target = GetObject(name);
+        target = GetObject(name);
         if (target != null)
         {
             target.transform.position = position;
@@ -90,9 +98,9 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
             }
         }
     }
-    public void CallBulletTypeObj(string name, Transform transform, float damage,bool deact = false, float time = 0f)
+    public void CallBulletTypeObj(string name, Transform transform, float damage, bool deact = false, float time = 0f)
     {
-        GameObject target = GetObject(name);
+        target = GetObject(name);
         if (target != null)
         {
             target.GetComponent<EffectTrigger>().DaamageScalar = damage;
@@ -107,7 +115,7 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
     }
     public void CallBulletTypeObj(string name, Vector3 position, Quaternion rotation, float damage, bool deact = false, float time = 0f)
     {
-        GameObject target = GetObject(name);
+        target = GetObject(name);
         if (target != null)
         {
             target.GetComponent<EffectTrigger>().DaamageScalar = damage;
@@ -120,24 +128,24 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
             }
         }
     }
-    public void CallText(string text, Vector3 position,Color color)
+    public void CallText(string text, Vector3 position, Color color)
     {
 
-        GameObject target = GetObject(_text);
+        target = GetObject(_text);
         if (target != null)
         {
-            DamageText dt = target.GetComponent<DamageText>();
-            TextMeshPro t = target.GetComponent<TextMeshPro>();
+             dt = target.GetComponent<DamageText>();
+             t = target.GetComponent<TextMeshPro>();
             dt.originColor = color;
             t.text = text;
-            target.transform.position = position+Vector3.up;
+            target.transform.position = position + Vector3.up;
             target.SetActive(true);
         }
     }
-    public void CallIndicator(Vector3 position, Quaternion quaternion, float size = 1f, float ratio = 1f,float far=5f,bool ortho = true )
+    public void CallIndicator(Vector3 position, Quaternion quaternion, float size = 1f, float ratio = 1f, float far = 5f, bool ortho = true)
     {
 
-        GameObject target = GetObject(indicator);
+        target = GetObject(indicator);
         if (target != null)
         {
             temp_p = target.GetComponent<Projector>();
@@ -152,25 +160,13 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
             StartCoroutine(Deactivate(target, 2f));
         }
     }
-    public void DeletePool()
-    {
-        for (int i = ObjPool.Count - 1; i >= 0; i++)
-        {
-            Destroy(ObjPool[i]);
-        }
-        ObjPool = null;
-    }
 
 
     //이펙트만 띄우는 오브젝트에만 한함
     private IEnumerator Deactivate(GameObject obj, float time)
     {
-        float t = 0f;
-        while (t < time)
-        {
-            t += Time.deltaTime * Time.timeScale;
-            yield return null;
-        }
+
+        yield return YieldInstructionCache.WaitForSeconds(time);
         obj.SetActive(false);
     }
 }

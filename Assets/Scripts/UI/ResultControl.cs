@@ -2,20 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Text;
 public class ResultControl : MonoBehaviour
 {
     public TextMeshProUGUI resultTxt;
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI expText;
     public TextMeshProUGUI scoreText;
-
+    StringBuilder sb=new StringBuilder(64);
 
     // Start is called before the first frame update
     void OnEnable()
     {
         int m = (int)(GameSceneManager.Instance.playTime / 60);
         int s= (int)(GameSceneManager.Instance.playTime % 60);
-        timeText.text = m.ToString() + " : " + s.ToString();
+
+        sb.Length = 0;
+        sb.Append(m.ToString());
+        sb.Append(" : ");
+        sb.Append(s.ToString());
+        timeText.text = sb.ToString();
         expText.text = PlayerManager.Instance.gainedExpInBattle.ToString();
         scoreText.text = PlayerManager.Instance.score.ToString();
         PlayerManager.Instance.GivePlayerExp();

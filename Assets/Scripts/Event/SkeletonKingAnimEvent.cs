@@ -81,21 +81,15 @@ public class SkeletonKingAnimEvent : EnemyAnimationEvent
     {
         for (int k = 0; k < ExplosionPos.Length; k++)
         {
-            float t = 0;
             ExplosionPos[k] = PlayerManager.Instance.Player.transform.position;
             ObjectPoolManager.Instance.CallObject("SkillMark_King", ExplosionPos[k] + Vector3.up * 0.1f, Quaternion.identity, true, 2f);
-            while(t<0.33f)
-            {
-                yield return null;
-                t += Time.deltaTime * Time.timeScale;
-            }
+            yield return YieldInstructionCache.WaitForSeconds(0.33f);
         }
     }
     IEnumerator ExcuteExplosion()
     {
         for (int k = 0; k < ExplosionPos.Length; k++)
         {
-            float t = 0;
 
             stringBuilder.Length = 0;
             stringBuilder.Append(enemyName);
@@ -110,23 +104,15 @@ public class SkeletonKingAnimEvent : EnemyAnimationEvent
                 if (player != null)
                     player.Damaged(3000);
             }
-            while (t < 0.33f)
-            {
-                yield return null;
-                t += Time.deltaTime * Time.timeScale;
-            }
+            yield return YieldInstructionCache.WaitForSeconds(0.33f);
         }
     }
     IEnumerator UsingKingShield()
     {
         kingShield.SetActive(true);
         Enemy.defenseBuff = true;
-        float t = 0;
-        while (t < 15f)
-        {
-            t += Time.deltaTime * Time.timeScale;
-            yield return null;
-        }
+
+        yield return YieldInstructionCache.WaitForSeconds(15f);
 
         Enemy.defenseBuff = false;
         kingShield.SetActive(false); ;

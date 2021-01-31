@@ -138,22 +138,13 @@ public class StageTrigger : MonoBehaviour
         if (isBossStage)
         {
             player.SetStateTrigger(State.Victory);
-            time = 0f;
-            while (time < 2f)
-            {
-                yield return null;
-                time += Time.deltaTime * Time.timeScale;
-            }
+
+            yield return YieldInstructionCache.WaitForSeconds(2f);
         }
     }
     private IEnumerator BossAppearence()
     {
-        float t = 0f;
-        while (t<bossAppearTime)
-        {
-            yield return null;
-            t += Time.deltaTime * Time.timeScale;
-        }
+        yield return YieldInstructionCache.WaitForSeconds(bossAppearTime);
         BossEvent.Invoke();
     }
     private IEnumerator CheckMonster()

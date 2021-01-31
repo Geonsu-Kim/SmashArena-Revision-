@@ -90,12 +90,8 @@ public class SkeletonRangedAnimEvent : EnemyAnimationEvent
         int count = 0;
         while (count < 10)
         {
-            float t = 0;
-            while (t < 0.33f)
-            {
-                yield return null;
-                t += Time.deltaTime * Time.timeScale;
-            }
+
+            yield return YieldInstructionCache.WaitForSeconds(0.33f);
             checkedColliders = OverLapRaycast.CheckBox((Vector3.right * 10f + Vector3.up * 8f + Vector3.forward * 5f) * 0.5f, ArrowRainPts[randomNum].transform.position + Vector3.up * 4f, Quaternion.identity);
             for (int i = 0; i < checkedColliders.Length; i++)
             {

@@ -11,6 +11,7 @@ public class BulletTrigger : EffectTrigger
     public Vector3 forceDir;
     public GameObject hit;
 
+    private FSMBase fSM;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -25,7 +26,7 @@ public class BulletTrigger : EffectTrigger
         if ((this.gameObject.CompareTag("PlayerAttack") && other.gameObject.CompareTag("Enemy"))
         || (this.gameObject.CompareTag("EnemyAttack") && other.gameObject.CompareTag("Player")))
         {
-            FSMBase fSM = other.gameObject.GetComponent<FSMBase>();
+            fSM = other.gameObject.GetComponent<FSMBase>();
             fSM.Damaged(damageScalar);
         }
         else if (other.gameObject.CompareTag("StaticObj")&& !canFierceObj)

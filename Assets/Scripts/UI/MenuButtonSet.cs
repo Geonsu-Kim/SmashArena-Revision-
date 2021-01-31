@@ -17,14 +17,6 @@ public class MenuButtonSet : MonoBehaviour
 
         Menu.SetActive(false);
     }
-    public void OnClickSave()
-    {
-
-    }
-    public void OnClickLoad()
-    {
-
-    }
     public void OnClickExit()
     {
 

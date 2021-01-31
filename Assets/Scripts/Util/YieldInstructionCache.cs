@@ -19,10 +19,9 @@ public static class YieldInstructionCache
     public static readonly WaitForFixedUpdate WaitForFixedUpdate = new WaitForFixedUpdate();
 
     private static readonly Dictionary<float, WaitForSeconds> _timeInterval = new Dictionary<float, WaitForSeconds>(new FloatComparer());
-
+    private static WaitForSeconds wfs;
     public static WaitForSeconds WaitForSeconds(float seconds)
     {
-        WaitForSeconds wfs;
         if (!_timeInterval.TryGetValue(seconds, out wfs))
             _timeInterval.Add(seconds, wfs = new WaitForSeconds(seconds));
         return wfs;

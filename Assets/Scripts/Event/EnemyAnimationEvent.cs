@@ -13,9 +13,9 @@ public class EnemyAnimationEvent : MonoBehaviour
     protected string SFXname;
     protected StringBuilder stringBuilder;
     // Start is called before the first frame update
-    protected void Start()
+    protected void Awake()
     {
-        stringBuilder = new StringBuilder(64);
+        stringBuilder = new StringBuilder(64); 
         Enemy = GetComponent<FSMEnemy>();
         Weapon = Enemy.Weapon;
     }
