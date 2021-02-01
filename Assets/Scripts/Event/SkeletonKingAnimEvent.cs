@@ -103,7 +103,7 @@ public class SkeletonKingAnimEvent : EnemyAnimationEvent
             {
                 FSMPlayer player = checkedColliders[i].gameObject.GetComponent<FSMPlayer>();
                 if (player != null)
-                    player.Damaged(3000);
+                    player.Damaged(2000f);
             }
             yield return YieldInstructionCache.WaitForSeconds(0.33f);
         }

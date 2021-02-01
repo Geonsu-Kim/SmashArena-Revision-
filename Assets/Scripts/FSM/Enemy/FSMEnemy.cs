@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 [RequireComponent(typeof(Agent))]
-[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(ItemDrop))]
 public  class FSMEnemy : FSMBase
@@ -12,7 +12,7 @@ public  class FSMEnemy : FSMBase
     [SerializeField]private int exp;
     protected FSMPlayer player;
     protected Agent agent;
-    protected BoxCollider coll;
+    protected CapsuleCollider coll;
     protected ItemDrop drop;
 
     public EnemyInfo info;
@@ -32,7 +32,7 @@ public  class FSMEnemy : FSMBase
         agent = GetComponent<Agent>();
         agent._Awake();
         rb = GetComponent<Rigidbody>();
-        coll = GetComponent<BoxCollider>();
+        coll = GetComponent<CapsuleCollider>();
         drop = GetComponent<ItemDrop>();
         for (int i = 0; i < Weapon.Length; i++)
         {

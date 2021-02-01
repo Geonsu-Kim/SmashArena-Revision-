@@ -91,7 +91,7 @@ public class SkeletonMeleeAnimEvent : EnemyAnimationEvent
     { 
         for (int i = 0; i < StrikePts[randomPos].childCount; i++)
         {
-            ObjectPoolManager.Instance.CallBulletTypeObj("SkeletonStriker", StrikePts[randomPos].GetChild(i).transform, 1000f, true, 2.0f);
+            ObjectPoolManager.Instance.CallBulletTypeObj("SkeletonStriker", StrikePts[randomPos].GetChild(i).transform, 3000f, true, 2.0f);
         }
     }
 }

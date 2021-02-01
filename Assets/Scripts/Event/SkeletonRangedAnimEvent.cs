@@ -65,7 +65,7 @@ public class SkeletonRangedAnimEvent : EnemyAnimationEvent
         {
             FSMPlayer player = checkedColliders[i].gameObject.GetComponent<FSMPlayer>();
             if (player != null)
-                player.Damaged(2000);
+                player.Damaged(3000f);
         }
     }
     private void OnArrowRainReady()
@@ -97,7 +97,7 @@ public class SkeletonRangedAnimEvent : EnemyAnimationEvent
             {
                 FSMPlayer player = checkedColliders[i].gameObject.GetComponent<FSMPlayer>();
                 if (player != null)
-                    player.Damaged(500);
+                    player.Damaged(1000f);
             }
             count++;
         }
