@@ -123,10 +123,6 @@ public class PlayerAction : MonoBehaviour
     }
     public void Move()
     {
-        if (player.CheckAction())
-        {
-            this.transform.rotation = Quaternion.LookRotation(player.Dir);
-        }
         if (player.GetDir())
         {
             this.transform.rotation = Quaternion.LookRotation(player.Dir);

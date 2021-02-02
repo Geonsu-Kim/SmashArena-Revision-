@@ -22,6 +22,7 @@ public class TouchPad : MonoBehaviour
         player = PlayerManager.Instance.Player;
         action = player.GetComponent<PlayerAction>();
         moveCommand = new MoveCommand(action);
+        player.SetCommand(-1, moveCommand);
     }
 
     private void FixedUpdate()
@@ -103,7 +104,7 @@ public class TouchPad : MonoBehaviour
         if (player != null)
         {
             player.SetDir(normDiff);
-            moveCommand.Execute();
+            player.ExecuteCommand(-1);
         }
     }
 }

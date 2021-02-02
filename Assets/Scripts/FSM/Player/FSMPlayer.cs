@@ -29,14 +29,16 @@ public class FSMPlayer : FSMBase
     private PlayerAction action;
     private Command moveCommand;
     private Command[] skillCommands;
+    private Dictionary<int, Command> commandList;
 
     public UnityEvent OnPlayerDied;
     public UnityEvent OnPlayerWin;
     public Vector3 Dir;
     public Vector3 StartPos;
-    public List<Skill> skills;
     public PlayerMana mana;
     public CharacterController m_cc;
+    public List<Skill> skills;
+
     [HideInInspector] public int blueGem;
     [HideInInspector] public int cri_Level;
     [HideInInspector] public int def_Level;
@@ -74,12 +76,7 @@ public class FSMPlayer : FSMBase
         base.Awake();
         m_cc = GetComponent<CharacterController>();
         action = GetComponent<PlayerAction>();
-        moveCommand = new MoveCommand(action);
-        skillCommands = new SkillCommand[5];
-        for (int i = 0; i < skillCommands.Length; i++)
-        {
-            skillCommands[i] = new SkillCommand(action,i);
-        }
+        commandList = new Dictionary<int, Command>();
     }
     
     private void Start()
@@ -105,15 +102,6 @@ public class FSMPlayer : FSMBase
         RecoverMP((int)mana.MaxMP);
     }
 
-
-
-    protected override IEnumerator Idle()
-    {
-        do
-        {
-            yield return null;
-        } while (!isNewState);
-    }
     public override void Damaged(float amount, bool critical = false)
     {
         if (isDead()) return;
@@ -130,6 +118,30 @@ public class FSMPlayer : FSMBase
         {
             SetStateTrigger(State.Dead);
         }
+    }
+    public void SetCommand(int i,Command c)
+    {
+        commandList.Add(i, c);
+    }
+    public void ExecuteCommand(int i)
+    {
+        commandList[i].Execute();
+    }
+    public void SetDir(Vector2 dir)//방향키 입력 여부
+    {
+        Dir.x = dir.x;
+        Dir.z = dir.y;
+        Dir = Dir.normalized;
+    }
+    public bool GetDir()//방향키 입력 여부
+    {
+        if (IsEnd()) return false;
+        if (Dir.x == 0 && Dir.z == 0)
+        {
+            return false;//방향키를 입력하지않음
+        }
+
+        return true;
     }
     public void Warp(Vector3 pos)
     {
@@ -299,21 +311,13 @@ public class FSMPlayer : FSMBase
         UIManager.Instance.SignalOff(3);
     }
 
-    public void SetDir(Vector2 dir)//방향키 입력 여부
-    {
-        Dir.x = dir.x;
-        Dir.z = dir.y;
-        Dir = Dir.normalized;
-    }
-    public bool GetDir()//방향키 입력 여부
-    {
-        if (IsEnd()) return false;
-        if (Dir.x == 0 && Dir.z == 0)
-        {
-            return false;//방향키를 입력하지않음
-        }
 
-        return true;
+    protected override IEnumerator Idle()
+    {
+        do
+        {
+            yield return null;
+        } while (!isNewState);
     }
     protected override IEnumerator Attack()
     {

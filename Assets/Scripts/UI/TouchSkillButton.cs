@@ -22,6 +22,7 @@ public class TouchSkillButton : MonoBehaviour
         player = PlayerManager.Instance.Player;
         action = player.GetComponent<PlayerAction>();
         skillCommands = new SkillCommand(action, skill_ID);
+        player.SetCommand(skill_ID, skillCommands);
         Icon = GetComponent<Image>();
         button = GetComponent<Button>();
         button.onClick.AddListener(SkillButtonDown);
@@ -46,7 +47,7 @@ public class TouchSkillButton : MonoBehaviour
     {
         if (skill_ID== 0)
         {
-            skillCommands.Execute();
+            player.ExecuteCommand(skill_ID);
         }
         else {
             if (PlayerManager.Instance.OnBattle)
@@ -55,7 +56,7 @@ public class TouchSkillButton : MonoBehaviour
                 {
                     coolDown = true;
                     StartCoroutine(SkillCoolDown());
-                    skillCommands.Execute();
+                    player.ExecuteCommand(skill_ID);
                 }
             }
         }
