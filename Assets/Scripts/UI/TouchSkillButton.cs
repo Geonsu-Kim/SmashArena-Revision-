@@ -11,10 +11,17 @@ public class TouchSkillButton : MonoBehaviour
     private bool coolDown=false;
     private Image Icon;
     private FSMPlayer player;
+    private PlayerAction action;
     private Button button;
+
+
+    private Command skillCommands;
+
     private void Start()
     {
         player = PlayerManager.Instance.Player;
+        action = player.GetComponent<PlayerAction>();
+        skillCommands = new SkillCommand(action, skill_ID);
         Icon = GetComponent<Image>();
         button = GetComponent<Button>();
         button.onClick.AddListener(SkillButtonDown);
@@ -39,7 +46,7 @@ public class TouchSkillButton : MonoBehaviour
     {
         if (skill_ID== 0)
         {
-            player.Action(skill_ID);
+            skillCommands.Execute();
         }
         else {
             if (PlayerManager.Instance.OnBattle)
@@ -48,7 +55,7 @@ public class TouchSkillButton : MonoBehaviour
                 {
                     coolDown = true;
                     StartCoroutine(SkillCoolDown());
-                    player.Action(skill_ID);
+                    skillCommands.Execute();
                 }
             }
         }

@@ -9,10 +9,6 @@ public class PlayerAction : MonoBehaviour
     private const string playerName = "Player";
     private string SFXname;
     private FSMPlayer player;
-    public GameObject[] skillEffect;
-
-    public Transform[] skillPos;
-    public GameObject Registance;
     private void Start()
     {
         player = GetComponent<FSMPlayer>();
@@ -124,6 +120,19 @@ public class PlayerAction : MonoBehaviour
         }
 
         player.ConsumeMana(player.skills[4].Mana);
+    }
+    public void Move()
+    {
+        if (player.CheckAction())
+        {
+            this.transform.rotation = Quaternion.LookRotation(player.Dir);
+        }
+        if (player.GetDir())
+        {
+            this.transform.rotation = Quaternion.LookRotation(player.Dir);
+            player.m_cc.Move(player.Dir * Time.deltaTime * 2f);
+            player.SetState(State.Run);
+        }
     }
     // Update is called once per frame
 }

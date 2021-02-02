@@ -26,6 +26,7 @@ public class FSMPlayer : FSMBase
     private float buffTime_Critical = 0;
     private float buffTime_CoolDown = 0;
 
+    private PlayerAction action;
     private Command moveCommand;
     private Command[] skillCommands;
 
@@ -72,11 +73,12 @@ public class FSMPlayer : FSMBase
     {
         base.Awake();
         m_cc = GetComponent<CharacterController>();
-        moveCommand = new MoveCommand();
+        action = GetComponent<PlayerAction>();
+        moveCommand = new MoveCommand(action);
         skillCommands = new SkillCommand[5];
         for (int i = 0; i < skillCommands.Length; i++)
         {
-            skillCommands[i] = new SkillCommand(i);
+            skillCommands[i] = new SkillCommand(action,i);
         }
     }
     
@@ -104,11 +106,6 @@ public class FSMPlayer : FSMBase
     }
 
 
-    private void Update()
-    {
-        if(GetDir())
-            moveCommand.Execute(this.gameObject);
-    }
 
     protected override IEnumerator Idle()
     {
@@ -302,10 +299,6 @@ public class FSMPlayer : FSMBase
         UIManager.Instance.SignalOff(3);
     }
 
-    public void Action(int num)
-    {
-        skillCommands[num].Execute(this.gameObject);
-    }
     public void SetDir(Vector2 dir)//방향키 입력 여부
     {
         Dir.x = dir.x;
@@ -389,7 +382,7 @@ public class FSMPlayer : FSMBase
                 }
                 else
                 {
-                    moveCommand.Execute(this.gameObject);
+                    SetState(State.Run);
                 }
             }
 

@@ -5,19 +5,23 @@ using UnityEngine.UI;
 public class TouchPad : MonoBehaviour
 {
 
-    private RectTransform touchPad;
     private int touchID = -1;
+    private float dragRadius = 80f;
+    private bool buttonPressed = false;
     private Vector3 startPos = Vector3.zero;
     private Vector3 diff;
-    private float dragRadius = 80f;
+    private RectTransform touchPad;
     private FSMPlayer player;
-    private bool buttonPressed = false;
+    private PlayerAction action;
+    private Command moveCommand;
     // Start is called before the first frame update
     void Start()
     {
         touchPad = GetComponent<RectTransform>();
         startPos = touchPad.position;
         player = PlayerManager.Instance.Player;
+        action = player.GetComponent<PlayerAction>();
+        moveCommand = new MoveCommand(action);
     }
 
     private void FixedUpdate()
@@ -99,6 +103,7 @@ public class TouchPad : MonoBehaviour
         if (player != null)
         {
             player.SetDir(normDiff);
+            moveCommand.Execute();
         }
     }
 }

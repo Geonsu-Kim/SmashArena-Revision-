@@ -5,15 +5,13 @@ using UnityEngine;
 public class SkillCommand : Command
 {
     private int m_num;
-    private PlayerAction action;
     
-    public SkillCommand(int num)
+    public SkillCommand(PlayerAction action,int num):base(action)
     {
         m_num = num;
     }
-    public override bool Execute(GameObject obj)
+    public override bool Execute()
     {
-        action = obj.GetComponent<PlayerAction>();
         if (action != null)
         {
             action.UseSkill(m_num);

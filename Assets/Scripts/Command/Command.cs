@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 [System.Serializable]
-public class Command
+public abstract class Command
 {
-    protected FSMPlayer fsmPlayer=null;
+    protected PlayerAction action;
 
-    // Start is called before the first frame update
-    public virtual bool Execute(GameObject obj)
+    public Command(PlayerAction _action)
     {
-        return false;
+        action = _action;
     }
+    public abstract bool Execute();
 }
