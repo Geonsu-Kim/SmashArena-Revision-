@@ -26,6 +26,20 @@ public class PlayerAction : MonoBehaviour
 
         }
     }
+    public void Move()
+    {
+        if (player.GetDir())
+        {
+            if (player.CheckAction())
+            {
+                this.transform.rotation = Quaternion.LookRotation(player.Dir);
+                return;
+            }
+            this.transform.rotation = Quaternion.LookRotation(player.Dir);
+            player.m_cc.Move(player.Dir * Time.deltaTime * 2f);
+            player.SetState(State.Run);
+        }
+    }
     public void Attack()
     {
         if (PlayerManager.Instance.OnBattle)
@@ -120,15 +134,6 @@ public class PlayerAction : MonoBehaviour
         }
 
         player.ConsumeMana(player.skills[4].Mana);
-    }
-    public void Move()
-    {
-        if (player.GetDir())
-        {
-            this.transform.rotation = Quaternion.LookRotation(player.Dir);
-            player.m_cc.Move(player.Dir * Time.deltaTime * 2f);
-            player.SetState(State.Run);
-        }
     }
     // Update is called once per frame
 }

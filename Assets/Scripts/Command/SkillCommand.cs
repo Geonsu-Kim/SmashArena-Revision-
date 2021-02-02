@@ -5,7 +5,6 @@ using UnityEngine;
 public class SkillCommand : Command
 {
     private int m_num;
-    
     public SkillCommand(PlayerAction action,int num):base(action)
     {
         m_num = num;
@@ -19,5 +18,4 @@ public class SkillCommand : Command
         }
         else return false;
     }
-
 }
