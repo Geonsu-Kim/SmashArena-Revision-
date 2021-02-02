@@ -10,7 +10,7 @@ public abstract class Item : MonoBehaviour
 
     public ItemType type;
     protected FSMPlayer player;
-    protected abstract void GetItem(FSMPlayer player); 
+    protected abstract void GetItem(); 
     private void Start()
     {
         player = PlayerManager.Instance.Player;
@@ -19,7 +19,7 @@ public abstract class Item : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            GetItem(player);
+            GetItem();
             gameObject.SetActive(false);
         }
     }

@@ -58,7 +58,7 @@ public class SoundManager : SingletonBase<SoundManager>
         {
             if (SFX[i].name.CompareTo(name) == 0)
             {
-                AudioSource source = GetEmtryAudio();
+                AudioSource source = GetEmptyAudio();
                 source.clip = SFX[i];
 
                 source.volume = volume;
@@ -83,7 +83,7 @@ public class SoundManager : SingletonBase<SoundManager>
         }
         
     }
-    private AudioSource GetEmtryAudio()
+    private AudioSource GetEmptyAudio()
     {
         float maxP = 0;
         int maxIdx = 0;

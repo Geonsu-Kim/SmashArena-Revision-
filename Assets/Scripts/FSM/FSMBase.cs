@@ -79,17 +79,18 @@ public abstract class FSMBase : MonoBehaviour
         }
     }
     public abstract void Damaged(float amount,bool critical=false);
-    public void SetState(State newState)
-    {
-        isNewState = true;
-        m_state = newState;
-        animator.SetInteger(stringParam, (int)m_state);
-    }
+
     public void SetStateTrigger(State newState)
     {
         isNewState = true;
         m_state = newState;
         animator.SetTrigger(newState.ToString());
+    }
+    public void SetState(State newState)
+    {
+        isNewState = true;
+        m_state = newState;
+        animator.SetInteger(stringParam, (int)m_state);
     }
     IEnumerator FSMMain()
     {

@@ -11,7 +11,7 @@ public class Goods : Item
     public int minAmount;
     public int maxAmount;
 
-    protected override void GetItem(FSMPlayer player)
+    protected override void GetItem()
     {
         int amount = Random.Range(minAmount, maxAmount);
         player.GetGoods(goods, amount);

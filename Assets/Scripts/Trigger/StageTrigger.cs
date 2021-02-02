@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 public class StageTrigger : MonoBehaviour
-{    [SerializeField]
+{    
+    [HideInInspector]  public List<Door> Doors_Cur;
+    [HideInInspector]  public List<Door> Doors_Next;
+    [SerializeField]
     private float battleTime;
     [SerializeField]
     private float spawnInterval;
@@ -30,8 +33,6 @@ public class StageTrigger : MonoBehaviour
     
     public EnemySpawn[] enemySpawn;
 
-    [HideInInspector]  public List<Door> Doors_Cur;
-    [HideInInspector]  public List<Door> Doors_Next;
     private void Awake()
     {
         box = GetComponent<BoxCollider>();

@@ -10,7 +10,7 @@ public class BuffItem : Item
     public  BuffType buff;
 
 
-    protected override void GetItem(FSMPlayer player)
+    protected override void GetItem()
     {
         player.GetBuff(buff);
     }

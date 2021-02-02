@@ -11,7 +11,6 @@ public class BulletTrigger : EffectTrigger
     public Vector3 forceDir;
     public GameObject hit;
 
-    private FSMBase fSM;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();

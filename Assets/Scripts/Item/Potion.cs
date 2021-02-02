@@ -10,7 +10,7 @@ public class Potion : Item
     public PotionType potion;
     public int level;
 
-    protected override void GetItem(FSMPlayer player)
+    protected override void GetItem()
     {
         player.GetPotion(potion, level);
     }
