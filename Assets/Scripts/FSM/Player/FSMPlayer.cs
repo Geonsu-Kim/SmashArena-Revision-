@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Text;
-[RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerAction))]
 public class FSMPlayer : FSMBase
 {
@@ -36,7 +35,6 @@ public class FSMPlayer : FSMBase
     public Vector3 Dir;
     public Vector3 StartPos;
     public PlayerMana mana;
-    public CharacterController m_cc;
     public List<Skill> skills;
 
     [HideInInspector] public int blueGem;
@@ -45,8 +43,8 @@ public class FSMPlayer : FSMBase
     [HideInInspector] public StageTrigger stageTrigger;
     [HideInInspector] public PortalTrigger portal;
     public bool ComboOnOff { get { return comboOnOff; } set { comboOnOff = value; } }
+    public Animator _Animator { get { return animator; } }
     public int BtnNum { get { return btnNum; } set { btnNum = value; } }
-
     public int Exp { get { return exp; } set { exp = value; } }
 
     public int Level { get { return level; } set { level = value; } }
@@ -69,7 +67,6 @@ public class FSMPlayer : FSMBase
             level++;
             InitStat();
         }
-
     }
     protected override void Awake()
     {
@@ -324,14 +321,18 @@ public class FSMPlayer : FSMBase
         do
         {
             yield return null;
-            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.4f)
+            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f)
             {
                 comboOnOff = false;
             }
-            else if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.6f)
+            else if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
             {
                 if (!comboOnOff)
                 {
+                    if (GetDir())
+                    {
+                        SetState(State.Run);
+                    }
                     SetState(State.Idle);
                 }
             }
@@ -375,6 +376,7 @@ public class FSMPlayer : FSMBase
     private IEnumerator Roll()
     {
         invincibility = true;
+        m_cc.enabled = false;
         do
         {
             yield return null;
@@ -392,6 +394,7 @@ public class FSMPlayer : FSMBase
 
         } while (!isNewState);
         invincibility = false;
+        m_cc.enabled = true;
     }
 
 
@@ -403,6 +406,10 @@ public class FSMPlayer : FSMBase
             yield return null;
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.8f)
             {
+                if (GetDir())
+                {
+                    SetState(State.Run);
+                }
                 SetState(State.Idle);
             }
 
@@ -416,6 +423,10 @@ public class FSMPlayer : FSMBase
             yield return null;
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
             {
+                if (GetDir())
+                {
+                    SetState(State.Run);
+                }
                 SetState(State.Idle);
             }
 
@@ -430,6 +441,10 @@ public class FSMPlayer : FSMBase
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
             {
 
+                if (GetDir())
+                {
+                    SetState(State.Run);
+                }
                 SetState(State.Idle);
 
             }
@@ -443,6 +458,10 @@ public class FSMPlayer : FSMBase
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.9f)
             {
 
+                if (GetDir())
+                {
+                    SetState(State.Run);
+                }
                 SetState(State.Idle);
 
             }

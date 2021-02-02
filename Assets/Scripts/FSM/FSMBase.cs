@@ -17,6 +17,7 @@ public enum State
     Dead,           //9
     Stun            //10
 }
+[RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 
 public abstract class FSMBase : MonoBehaviour
@@ -38,6 +39,7 @@ public abstract class FSMBase : MonoBehaviour
     protected Color originalColor = new Color(0, 0, 0);
 
     protected StringBuilder sb;
+    public CharacterController m_cc;
     public Health health;
     public bool Invincibility { get { return invincibility; } }
     public bool isDead() { return m_state == State.Dead; }

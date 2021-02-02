@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: ArcherDecanus
   enemyMaxHp: 350
-  enemyAtkDamage: 150
-  enemyAtkRange: 3
+  enemyAtkDamage: 200
+  enemyAtkRange: 6
   enemyChasingRange: 50
   enemySpeed: 0
   enemyExp: 20

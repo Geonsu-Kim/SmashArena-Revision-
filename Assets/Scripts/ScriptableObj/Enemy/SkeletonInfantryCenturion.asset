@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: InfantryCenturion
   enemyMaxHp: 3500
-  enemyAtkDamage: 400
+  enemyAtkDamage: 250
   enemyAtkRange: 1.5
   enemyChasingRange: 50
   enemySpeed: 0

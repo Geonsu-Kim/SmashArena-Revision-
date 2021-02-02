@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Archer
   enemyMaxHp: 200
-  enemyAtkDamage: 100
-  enemyAtkRange: 3
+  enemyAtkDamage: 150
+  enemyAtkRange: 5
   enemyChasingRange: 50
   enemySpeed: 0
   enemyExp: 12

@@ -52,7 +52,7 @@ public class TouchSkillButton : MonoBehaviour
         else {
             if (PlayerManager.Instance.OnBattle)
             {
-                if (!coolDown&&!player.IsUsingSkill())
+                if (!coolDown && !player.IsUsingSkill() && !player._Animator.IsInTransition(0)) 
                 {
                     coolDown = true;
                     StartCoroutine(SkillCoolDown());
