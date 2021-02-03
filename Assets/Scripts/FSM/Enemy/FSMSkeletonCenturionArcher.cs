@@ -104,6 +104,8 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
             yield return null;
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
             {
+
+                RotateToPlayer();
                 if (SkillQueue.Count != 0&& skillCooldown)
                 {
                     StartCoroutine(QueueCoolDown(10f));

@@ -330,9 +330,8 @@ public class FSMPlayer : FSMBase
                 if (!comboOnOff)
                 {
                     if (GetDir())
-                    {
                         SetState(State.Run);
-                    }
+                    else
                     SetState(State.Idle);
                 }
             }
