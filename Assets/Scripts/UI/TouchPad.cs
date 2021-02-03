@@ -6,7 +6,8 @@ public class TouchPad : MonoBehaviour
 {
 
     private int touchID = -1;
-    private float dragRadius = 80f;
+    private float dragRadius = 0f;
+    private float padWidth = 0f;
     private bool buttonPressed = false;
     private Vector3 startPos = Vector3.zero;
     private Vector3 diff;
@@ -14,6 +15,7 @@ public class TouchPad : MonoBehaviour
     private FSMPlayer player;
     private PlayerAction action;
     private Command moveCommand;
+    public RectTransform BG;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,12 +25,15 @@ public class TouchPad : MonoBehaviour
         action = player.GetComponent<PlayerAction>();
         moveCommand = new MoveCommand(action);
         player.SetCommand(-1, moveCommand);
+        dragRadius = BG.rect.width/2 * Screen.width / 800;
+        padWidth = touchPad.rect.width / 2 * Screen.width / 800;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (player.isDead() || player.IsEnd()) return;
 #if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_WEBPLAYER
+
 
         HandleInput(Input.mousePosition);
 
@@ -55,7 +60,7 @@ public class TouchPad : MonoBehaviour
                 Vector3 touchPos = Vector3.right * touch.position.x + Vector3.up * touch.position.y;
                 if (touch.phase == TouchPhase.Began)
                 {
-                    if (touch.position.x <= (startPos.x + dragRadius))
+                    if (CheckTouchPos(touch.position))
                     {
                         touchID = i;
                     }
@@ -83,10 +88,11 @@ public class TouchPad : MonoBehaviour
         if (buttonPressed)
         {
             Vector3 diffVector = (input - startPos);
-            if (diffVector.sqrMagnitude > dragRadius * dragRadius)
+            float limit = dragRadius - padWidth;
+            if (diffVector.sqrMagnitude > limit * limit)
             {
                 diffVector.Normalize();
-                touchPad.position = startPos + diffVector * dragRadius;
+                touchPad.position = startPos + diffVector * limit;
             }
 
             else
@@ -106,5 +112,9 @@ public class TouchPad : MonoBehaviour
             player.SetDir(normDiff);
             player.ExecuteCommand(-1);
         }
+    }
+    bool CheckTouchPos(Vector2 pos)
+    {
+        return (pos.x <= startPos.x + dragRadius) && (pos.x >= startPos.x - dragRadius) && (pos.y <= startPos.y + dragRadius) && (pos.y >= startPos.y - dragRadius);
     }
 }
