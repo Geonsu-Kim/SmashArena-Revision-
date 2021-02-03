@@ -23,6 +23,8 @@ public class FSMSkeletonRanged : FSMEnemy
     }
     protected override IEnumerator Run()
     {
+        RotateToPlayer();
+
         do
         {
             if (isDead()) break;
@@ -43,6 +45,7 @@ public class FSMSkeletonRanged : FSMEnemy
     }
     protected override IEnumerator Attack()
     {
+        RotateToPlayer();
         agent.Stop();
         do
         {

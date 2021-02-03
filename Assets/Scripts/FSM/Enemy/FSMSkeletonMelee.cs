@@ -36,6 +36,8 @@ public class FSMSkeletonMelee : FSMEnemy
     }
     protected override IEnumerator Run()
     {
+        RotateToPlayer();
+
         do
         {
             if (isDead()) break;

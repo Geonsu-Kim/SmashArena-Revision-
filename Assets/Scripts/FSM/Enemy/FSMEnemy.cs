@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+public enum SpawnType
+{
+    Substance, Summon
+}
 [RequireComponent(typeof(Agent))]
 [RequireComponent(typeof(ItemDrop))]
 public  class FSMEnemy : FSMBase
@@ -12,6 +16,7 @@ public  class FSMEnemy : FSMBase
     protected Agent agent;
     protected ItemDrop drop;
 
+    public SpawnType type=SpawnType.Substance;
     public Collider[] Weapon;
     public EnemyInfo info;
     [HideInInspector] public bool defenseBuff = false;
@@ -56,9 +61,13 @@ public  class FSMEnemy : FSMBase
         if (health.IsDead())
         {
             SetStateTrigger(State.Dead);
-            drop.DropItem(Random.Range(0, drop.Max));
-            player.blueGem += info.BlueGem;
-            PlayerManager.Instance.gainedExpInBattle+=exp;
+
+            if (type == SpawnType.Substance)
+            {
+                drop.DropItem(Random.Range(0, drop.Max));
+                player.blueGem += info.BlueGem;
+                PlayerManager.Instance.gainedExpInBattle += exp;
+            }
             UIManager.Instance.EnemyInfo.SetActive(false);
         }
     }

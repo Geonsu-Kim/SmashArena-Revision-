@@ -67,6 +67,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
     }
     protected override IEnumerator Run()
     {
+        RotateToPlayer();
         do
         {
             if (isDead()) break;
@@ -95,6 +96,7 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
     }
     protected override IEnumerator Attack()
     {
+        RotateToPlayer();
         agent.Stop();
         do
         {
@@ -102,7 +104,6 @@ public class FSMSkeletonCenturionArcher : FSMEnemy
             yield return null;
             if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1.0f > 0.7f)
             {
-                RotateToPlayer();
                 if (SkillQueue.Count != 0&& skillCooldown)
                 {
                     StartCoroutine(QueueCoolDown(10f));
