@@ -44,7 +44,7 @@ public class SkeletonMeleeAnimEvent : EnemyAnimationEvent
         {
             ObjectPoolManager.Instance.CallObject("Summon", SummonPts[i].transform.position + Vector3.up * 0.2f, Quaternion.Euler(-90,0,0), true, 2.0f);
 
-            ObjectPoolManager.Instance.CallObject("SkeletonInfantry", SummonPts[i]);
+            ObjectPoolManager.Instance.CallEnemy("SkeletonInfantry", SummonPts[i],SpawnType.Summon);
         }
     }
     private void OnDisappointed() //중대장은 너희에게 실망했다

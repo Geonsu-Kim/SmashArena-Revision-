@@ -9,7 +9,7 @@ public class EnemySpawn : MonoBehaviour
     {
         if (target != null)
         {
-            ObjectPoolManager.Instance.CallObject(target.name, this.transform);
+            ObjectPoolManager.Instance.CallEnemy(target.name, this.transform);
         }
     }
 }

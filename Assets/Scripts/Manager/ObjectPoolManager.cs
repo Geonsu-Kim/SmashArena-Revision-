@@ -14,7 +14,7 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
     private GameObject target;
     private TextMeshPro t;
     private DamageText dt;
-
+    private FSMEnemy enemy;
     private const string indicator = "Indicator";
     private const string _text = "Text";
 
@@ -69,7 +69,18 @@ public class ObjectPoolManager : SingletonBase<ObjectPoolManager>
         }
         return null;
     }
-
+    public void CallEnemy(string name, Transform transform, SpawnType type=SpawnType.Substance, float time = 0f)
+    {
+        target = GetObject(name);
+        if (target != null)
+        {
+            target.transform.position = transform.position;
+            target.transform.rotation = transform.rotation;
+            enemy = target.GetComponent<FSMEnemy>();
+            enemy.type = type;
+            target.SetActive(true);
+        }
+    }
     public void CallObject(string name, Transform transform, bool deact = false, float time = 0f)
     {
         target = GetObject(name);
