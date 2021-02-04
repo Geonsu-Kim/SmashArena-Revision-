@@ -14,6 +14,7 @@ public class StageTrigger : MonoBehaviour
     private float bossAppearTime;
     [SerializeField]
     private float maxBattleTime;
+    private float time;
 
     [SerializeField]
     private bool isBossStage=false;
@@ -86,13 +87,14 @@ public class StageTrigger : MonoBehaviour
             Doors_Cur[i].Close();
         }
     }
+
     private IEnumerator OnBattle()
     {
         if (StartEvent != null)
         {
             StartEvent.Invoke();
         }
-        float time = 0f;
+         time = 0f;
         float timeInterval = 0f;
         while(time<= battleTime)
         {
@@ -153,7 +155,8 @@ public class StageTrigger : MonoBehaviour
         do
         {
             yield return null;
-            hits=Physics.OverlapBox(this.transform.position, new Vector3(25f, 12.5f, 25f), Quaternion.identity, 1 << 8);
+            time += Time.deltaTime * Time.timeScale;
+            hits =Physics.OverlapBox(this.transform.position, new Vector3(25f, 12.5f, 25f), Quaternion.identity, 1 << 8);
         } while (hits.Length!=0);
     }
 }
