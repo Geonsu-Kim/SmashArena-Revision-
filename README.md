@@ -1,6 +1,6 @@
 SmashArena-Revision-
 =============
-![화면 캡처 2021-02-03 233801](https://user-images.githubusercontent.com/33540555/106762419-2901ec80-6679-11eb-8760-c1c302a13651.png)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/bEnb-OvsjEM/0.jpg)](https://www.youtube.com/watch?v=bEnb-OvsjEM)
 
 이전 개인 Unity 프로젝트인 SmashArena의 게임 시나리오를 토대로 하고  
 여러 기술들을 학습하여 새로 제작한 모바일 3D 액션 RPG입니다.
