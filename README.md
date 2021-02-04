@@ -2,6 +2,9 @@ SmashArena-Revision-
 =============
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/bEnb-OvsjEM/0.jpg)](https://www.youtube.com/watch?v=bEnb-OvsjEM)
 
+이미지를 클릭하면 유튜브 링크로 이동합니다.
+
+
 이전 개인 Unity 프로젝트인 SmashArena의 게임 시나리오를 토대로 하고  
 여러 기술들을 학습하여 새로 제작한 모바일 3D 액션 RPG입니다.
 
